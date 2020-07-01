@@ -1,5 +1,6 @@
-Browser,workerid,screenH,screenW,OS
-Safari,0,1366,1024,an unknown OS
-Chrome,1,900,1440,Mac
-Chrome,2,768,1366,Windows
-Chrome,3,1080,1920,Windows
+screenW,Browser,workerid,screenH,OS
+1024,Safari,0,1366,an unknown OS
+1440,Chrome,1,900,Mac
+1366,Chrome,2,768,Windows
+1920,Chrome,3,1080,Windows
+1920,Chrome,4,1080,Windows

@@ -1,5 +1,6 @@
-language,education,enjoyment,workerid,assess,gender,age,comments
-English ,2,2,0,Confused,Male,28,No technical issues 
-English,3,2,1,Yes,Female,34,
-english,2,2,2,No,Female,24,
-English,3,2,3,Yes,Male,32,I actually enjoyed this HIT as it was fun and engaging. 
+assess,comments,gender,age,workerid,education,language,enjoyment
+Confused,No technical issues ,Male,28,0,2,English ,2
+Yes,,Female,34,1,3,English,2
+No,,Female,24,2,2,english,2
+Yes,I actually enjoyed this HIT as it was fun and engaging. ,Male,32,3,3,English,2
+Yes,no comments,Male,55,4,2,English,1
