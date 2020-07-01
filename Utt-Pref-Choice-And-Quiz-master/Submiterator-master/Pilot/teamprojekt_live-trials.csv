@@ -1,0 +1,25 @@
+obj1,simPreference1,normResponse1,pref2,simulatedAnswer,response2,order1,Answer.score_quiz3,pref1,workerid,slide_number,Answer.time_in_minutes,certainty,trial_type,obj2,sex,simPreference0,order0,normResponse0,featuresPresent,utterance,evalNum,simRank1,pref0,simRank2,Answer.score_quiz2,trialNum,order2,guessRank2,targetFeature,simRank0,guessRank0,response0,obj3,targetFeatureNum,name,Answer.score_quiz1,blockNr,uttCode,normResponse2,response1,simPreference2,numFeatures,item,guessRank1,targetUttCode
+331,0,0.11538461538461539,polka-dotted,331,0.85,331,4,striped,0,3,11.928066666666666,,task,313,male,0.5,313,0.23076923076923078,"['cloud', 'square', 'blue', 'green']",blue,,,solid,,5,0,123,,texture,,,0.3,123,2,task,5,0,22b1,0.653846153846154,0.15,1,4,15281,,22b1-3
+111,0,0.09090909090909091,polka-dotted,131,0.9,131,4,striped,0,4,11.928066666666666,,task,121,male,0.5,111,0.09090909090909091,"['cloud', 'blue']",cloud,,,solid,,5,1,121,,texture,,,0.1,131,2,task,5,0,331,0.8181818181818181,0.1,1,2,230,,331-3
+211,0,0,polka-dotted,232,1,222,4,striped,0,5,11.928066666666666,,task,222,male,0.5,232,0,"['circle', 'blue', 'red']",circle,,,solid,,5,2,211,,texture,,,0,232,2,task,5,0,321,1,0,1,3,6390,,321-3
+221,0,0,polka-dotted,131,1,212,4,striped,0,6,11.928066666666666,,task,131,male,0.5,131,0,"['cloud', 'circle', 'blue', 'red']",blue,,,solid,,5,3,221,,texture,,,0,212,2,task,5,0,22b1,1,0,1,4,1391,,22b1-3
+,,,,,,,4,,0,,11.928066666666666,1,,,,,,,,,,,,,5,,,,,,,,,,,5,,,,,,,,,
+,,,,,,,4,,0,,11.928066666666666,,,,,,,,,,2,solid,,striped,5,,,solid,,polka-dotted,polka-dotted,,,,,5,,,,,,,,striped,
+231,1,0.5357142857142857,square,231,0.35,331,4,circle,0,11,11.928066666666666,,task,331,male,0.5,133,0.2142857142857143,"['polka-dotted', 'blue', 'green']",polka-dotted,,,cloud,,5,0,231,,shape,,,0.3,133,1,task,5,1,321,0.25,0.75,0,3,20590,,321-3
+221,1,0.6153846153846154,square,222,0.3,221,4,circle,0,12,11.928066666666666,,task,222,male,0.5,222,0.15384615384615385,"['striped', 'polka-dotted', 'blue', 'red']",striped,,,cloud,,5,1,332,,shape,,,0.2,332,1,task,5,1,22a2b,0.23076923076923075,0.8,0,4,7620,,22a2b-2a
+221,1,0.5161290322580645,square,323,0.6,221,4,circle,0,13,11.928066666666666,,task,122,male,0.5,323,0.0967741935483871,"['striped', 'blue', 'red', 'green']",green,,,cloud,,5,2,122,,shape,,,0.15,323,1,task,5,1,311,0.3870967741935484,0.8,0,4,18410,,311-3
+231,1,0.653846153846154,square,213,0.35,231,4,circle,0,14,11.928066666666666,,task,213,male,0.5,213,0.07692307692307694,"['solid', 'polka-dotted', 'blue', 'green']",green,,,cloud,,5,3,333,,shape,,,0.1,333,1,task,5,1,22b2b,0.2692307692307693,0.85,0,4,27780,,22b2b-2
+,,,,,,,4,,0,,11.928066666666666,0.7,,,,,,,,,,,,,5,,,,,,,,,,,5,,,,,,,,,
+,,,,,,,4,,0,,11.928066666666666,,,,,,,,,,2,cloud,,square,5,,,cloud,,circle,circle,,,,,5,,,,,,,,square,
+111,0.5,0.09090909090909091,polka-dotted,131,1,111,2,striped,1,3,14.420683333333333,,task,121,female,0,121,0,"['cloud', 'blue']",blue,,,solid,,5,0,131,,texture,,,0,131,2,task,4,0,331,0.9090909090909091,0.1,1,2,230,,331-3
+132,0.5,0,polka-dotted,333,1,333,2,striped,1,4,14.420683333333333,,task,323,female,0,323,0,"['cloud', 'square', 'red', 'green']",square,,,solid,,5,1,132,,texture,,,0,333,2,task,4,0,22a2b,1,0,1,4,28681,,22a2b-2b
+312,0.5,0,polka-dotted,133,1,312,2,striped,1,5,14.420683333333333,,task,122,female,0,133,0,"['cloud', 'square', 'red', 'green']",cloud,,,solid,,5,2,122,,texture,,,0,133,2,task,4,0,22b1,1,0,1,4,21011,,22b1-3
+321,0.5,0,polka-dotted,131,1,131,2,striped,1,6,14.420683333333333,,task,131,female,0,113,0,"['cloud', 'square', 'blue', 'green']",cloud,,,solid,,5,3,321,,texture,,,0,113,2,task,4,0,22b1,1,0,1,4,8361,,22b1-3
+,,,,,,,2,,1,,14.420683333333333,1,,,,,,,,,,,,,5,,,,,,,,,,,4,,,,,,,,,
+,,,,,,,2,,1,,14.420683333333333,,,,,,,,,,3,striped,,solid,5,,,solid,,polka-dotted,polka-dotted,,,,,4,,,,,,,,striped,
+123,0,0,square,323,0.95,223,2,circle,1,11,14.420683333333333,,task,223,female,0.5,323,0,"['striped', 'green']",striped,,,cloud,,5,0,123,,shape,,,0,323,1,task,4,1,331,1,0,1,2,20230,,331-3
+131,0,0,square,113,0.95,113,2,circle,1,12,14.420683333333333,,task,212,female,0.5,131,0,"['solid', 'polka-dotted', 'blue', 'red', 'green']",solid,,,cloud,,5,1,212,,shape,,,0,113,1,task,4,1,22b1,1,0,1,5,8670,,22b1-2
+231,0,0,square,333,0.95,333,2,circle,1,13,14.420683333333333,,task,213,female,0.5,213,0,"['solid', 'polka-dotted', 'blue', 'green']",polka-dotted,,,cloud,,5,2,231,,shape,,,0,333,1,task,4,1,22b2b,1,0,1,4,27780,,22b2b-2
+313,0,0,square,313,0.95,123,2,circle,1,14,14.420683333333333,,task,123,female,0.5,313,0,"['solid', 'striped', 'polka-dotted', 'green']",green,,,cloud,,5,3,233,,shape,,,0,233,1,task,4,1,311,1,0,1,4,25300,,311-3
+,,,,,,,2,,1,,14.420683333333333,0.5,,,,,,,,,,,,,5,,,,,,,,,,,4,,,,,,,,,
+,,,,,,,2,,1,,14.420683333333333,,,,,,,,,,2,cloud,,circle,5,,,cloud,,square,square,,,,,4,,,,,,,,circle,

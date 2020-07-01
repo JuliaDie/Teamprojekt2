@@ -1,0 +1,815 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={The strategic use of ambiguity in dialogue},
+            pdfauthor={Ella I. Eisemann},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{The strategic use of ambiguity in dialogue}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Ella I. Eisemann}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{21.10.2019}
+
+
+\begin{document}
+\maketitle
+
+\hypertarget{structure}{%
+\subsection{Structure}\label{structure}}
+
+First, the model will be shown, then the testing and then the plotting.
+
+\hypertarget{rsa-model}{%
+\subsection{RSA-Model}\label{rsa-model}}
+
+The developed RSA-Modelling Framework is implemented in the following
+pages.
+
+The simple listener function determines the hypothetical listener's
+object choice given the objects to choose from and its preferences,
+determining P(obj \textbar{} utt, listener's object preferences).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{    knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{fig.width=}\DecValTok{4}\NormalTok{, }\DataTypeTok{fig.height =} \DecValTok{3}\NormalTok{) }
+
+\NormalTok{simpleListener <-}
+\StringTok{  }\ControlFlowTok{function}\NormalTok{(utterance,}
+\NormalTok{           mapUttToObjProbs,}
+\NormalTok{           listenerObjectPreferences) \{}
+\NormalTok{    objPosterior <-}
+\StringTok{      }\NormalTok{mapUttToObjProbs[utterance, ] }\OperatorTok{*}\StringTok{ }\NormalTok{(listenerObjectPreferences }\OperatorTok{+}\StringTok{ }\FloatTok{1e-100}\NormalTok{)}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{sum}\NormalTok{(objPosterior) }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) \{}
+      \KeywordTok{return}\NormalTok{(objPosterior)}
+\NormalTok{    \}}
+    \KeywordTok{return}\NormalTok{(objPosterior }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(objPosterior))}
+\NormalTok{  \}}
+\end{Highlighting}
+\end{Shaded}
+
+The simple pragmatic speaker considers all ``imaginable''
+(i.e.~implemented) preference distributions over objects of the
+listener. Starting with a prior assumption over the possible listener's
+preferences (``preferencesPrior''). This prior has one value for each
+feature value possible. Only the priors for the target feature values
+\textgreater{} 0 because only they are relevant for the task. It then
+infers the posterior over these preferences given the listener makes a
+particular object choice. The priors in the beginning have a uniform
+distribution but with each trial the priors are the previous posterior
+preference presumptions. This leads to a Bayesian learning process.
+``utterance'' is an index referring to one of the relevant utterances
+("relevantUtterances) which are all present feature values in the
+current objects i.e.~P(listener's feature value preferences \textbar{}
+utterance, object choice by the listener, prior over preferences).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{simplePragmaticSpeaker <-}
+\StringTok{  }\ControlFlowTok{function}\NormalTok{(utterance,}
+\NormalTok{           obj,}
+\NormalTok{           preferencesPriorAll,}
+\NormalTok{           relevantUtterances,}
+\NormalTok{           currentObjects,}
+\NormalTok{           mapUttToObjProbs,}
+\NormalTok{           objectPreferenceSoftPriors) \{}
+\NormalTok{    preferencesPrior <-}\StringTok{ }\NormalTok{preferencesPriorAll[relevantUtterances]}
+\NormalTok{    prefPost <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\KeywordTok{length}\NormalTok{(relevantUtterances) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{ (pref }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(preferencesPrior))) \{}
+      \CommentTok{# prior over the preferences the speaker is interested in}
+      \ControlFlowTok{if}\NormalTok{ (preferencesPrior[pref] }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{) \{}
+\NormalTok{        pp <-}
+\StringTok{          }\KeywordTok{simpleListener}\NormalTok{(utterance,}
+\NormalTok{                         mapUttToObjProbs,}
+\NormalTok{                         objectPreferenceSoftPriors[[pref]])}
+\NormalTok{        prefPost[pref] <-}\StringTok{ }\NormalTok{pp[obj] }\OperatorTok{*}\StringTok{ }\NormalTok{preferencesPrior[pref]}
+\NormalTok{      \}}
+\NormalTok{    \}}
+    \ControlFlowTok{for}\NormalTok{ (pos }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(relevantUtterances))) \{}
+\NormalTok{      preferencesPriorAll[relevantUtterances[pos]] <-}\StringTok{ }\NormalTok{prefPost[pos]}
+\NormalTok{    \}}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{sum}\NormalTok{(preferencesPriorAll) }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) \{}
+      \CommentTok{# no evidence for any preferences... -> no inference}
+      \KeywordTok{return}\NormalTok{(preferencesPriorAll)}
+\NormalTok{    \}}
+    \KeywordTok{return}\NormalTok{(preferencesPriorAll }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(preferencesPriorAll))}
+\NormalTok{  \}}
+\end{Highlighting}
+\end{Shaded}
+
+To know how well the model did, the evaluation number similar to the one
+used in the experiment is calculated. The best is 3 and the worst is 0.
+This number is calculated by comparing the simulated preferences the
+choosing listener has with the model or human predictions. To not
+compare absolute or relative numbers, as they might vary in quite big
+ranges, the hierarchy is compared. This results in having truthfully
+predicted which preferences the listener has (evaluation number = 3) in
+contrast to not having a clue about them (evaluation number = 0).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{evaluate <-}
+\StringTok{  }\ControlFlowTok{function}\NormalTok{(allUtterancePref,}
+\NormalTok{           preferencesPrior,}
+\NormalTok{           targetFeature) \{}
+\NormalTok{    index <-}\StringTok{ }\NormalTok{targetFeature }\OperatorTok{*}\StringTok{ }\DecValTok{3}
+\NormalTok{    indices <-}\StringTok{ }\KeywordTok{c}\NormalTok{(index }\OperatorTok{-}\StringTok{ }\DecValTok{2}\NormalTok{, index }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{, index)}
+\NormalTok{    tarFeaPref <-}\StringTok{ }\NormalTok{allUtterancePref[indices,]}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(preferencesPrior) }\OperatorTok{>}\StringTok{ }\DecValTok{3}\NormalTok{) \{}
+\NormalTok{      tarFeaPrefPrior <-}\StringTok{ }\NormalTok{preferencesPrior[indices]}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      tarFeaPrefPrior <-}\StringTok{ }\NormalTok{preferencesPrior}
+\NormalTok{    \}}
+\NormalTok{    prefRank <-}
+\StringTok{      }\KeywordTok{order}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(tarFeaPref[, }\DecValTok{3}\NormalTok{]))}
+\NormalTok{    prefPriorRank <-}
+\StringTok{      }\KeywordTok{order}\NormalTok{(tarFeaPrefPrior)}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(prefRank, prefPriorRank)) \{}
+\NormalTok{      evalNum <-}\StringTok{ }\DecValTok{3}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{1}\NormalTok{], prefRank[}\DecValTok{3}\NormalTok{], prefRank[}\DecValTok{2}\NormalTok{])) }\OperatorTok{||}
+\StringTok{               }\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{2}\NormalTok{], prefRank[}\DecValTok{1}\NormalTok{], prefRank[}\DecValTok{3}\NormalTok{]))) \{}
+\NormalTok{      evalNum <-}\StringTok{ }\DecValTok{2}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{2}\NormalTok{], prefRank[}\DecValTok{3}\NormalTok{], prefRank[}\DecValTok{1}\NormalTok{])) }\OperatorTok{||}
+\StringTok{               }\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{3}\NormalTok{], prefRank[}\DecValTok{1}\NormalTok{], prefRank[}\DecValTok{2}\NormalTok{]))) \{}
+\NormalTok{      evalNum <-}\StringTok{ }\DecValTok{1}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{3}\NormalTok{], prefRank[}\DecValTok{2}\NormalTok{], prefRank[}\DecValTok{1}\NormalTok{]))) \{}
+\NormalTok{      evalNum <-}\StringTok{ }\DecValTok{0}
+\NormalTok{    \}}
+    \KeywordTok{return}\NormalTok{(evalNum)}
+\NormalTok{  \}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{evaluation-and-model-testing}{%
+\section{Evaluation and Model
+testing}\label{evaluation-and-model-testing}}
+
+The model has some determining factors for how it performs. These are
+the not-obey-instant and the soft-preferences-value. The
+not-obey-instant is a value between 0 and 1, with 0 the listener follows
+always it's preferences and 1 not at all. The soft-preferences-value
+manipulates how strong the listener's preferences are. With the value
+being 0 the listener has absolute preferences and absolute
+non-preferences. Augmenting this value leads to a uniform-prior model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{notObeyInst <-}\StringTok{ }\DecValTok{0}
+\NormalTok{softPrefValue <-}\StringTok{ }\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+Here the model gets tested with the data from the experiment. It allows
+direct comparison of the performance of the model with the human
+behavior. The data to feed the model is the data which was also fed to
+the participants in the experiment. For each combination of objects,
+utterance and previous trials the model adjusts its posterior
+presumptions which then become the next prior presumptions.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (worker }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\OperatorTok{:}\NormalTok{totalWorker)) \{}
+  \ControlFlowTok{for}\NormalTok{ (block }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{totalBlock)) \{}
+\NormalTok{    blockdata <-}
+\StringTok{      }\KeywordTok{subset}\NormalTok{(inputData,}
+\NormalTok{             blockNr }\OperatorTok{==}\StringTok{ }\NormalTok{block }\OperatorTok{-}\StringTok{ }\DecValTok{1} \OperatorTok{&}
+\StringTok{               }\NormalTok{workerid }\OperatorTok{==}\StringTok{ }\KeywordTok{unique}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid)[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{])}
+\NormalTok{    targetFeatureNum <-}\StringTok{ }\NormalTok{blockdata}\OperatorTok{$}\NormalTok{targetFeatureNum[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    preferencesPrior <-}\StringTok{ }\KeywordTok{getPreferencesPrior}\NormalTok{(targetFeatureNum)}
+\NormalTok{    preferencesPriorIndices <-}\StringTok{ }\KeywordTok{which}\NormalTok{(preferencesPrior }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{)}
+\NormalTok{    allUtterancePref <-}
+\StringTok{      }\KeywordTok{getAllUtterancePref}\NormalTok{(}
+        \KeywordTok{c}\NormalTok{(}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{simPreference0[}\DecValTok{1}\NormalTok{],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{simPreference1[}\DecValTok{1}\NormalTok{],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{simPreference2[}\DecValTok{1}\NormalTok{]}
+\NormalTok{        )}
+\NormalTok{      )}
+\NormalTok{    ambiguousUtteranceCount <-}\StringTok{ }\DecValTok{0}
+    \ControlFlowTok{for}\NormalTok{ (trial }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{maxTrialNum)) \{}
+\NormalTok{      row <-}\StringTok{ }\NormalTok{row }\OperatorTok{+}\StringTok{ }\DecValTok{1}
+\NormalTok{      currentObjects <-}
+\StringTok{        }\KeywordTok{c}\NormalTok{(blockdata}\OperatorTok{$}\NormalTok{orderObjNum1[trial],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{orderObjNum2[trial],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{orderObjNum3[trial])}
+\NormalTok{      allPresentFeaValues <-}\StringTok{ }\KeywordTok{determineAllFeaValues}\NormalTok{(currentObjects)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{allPresentFeaValues[row] <-}
+\StringTok{        }\KeywordTok{toString}\NormalTok{(allPresentFeaValues)}
+\NormalTok{      relevantUtterances <-}\StringTok{ }\KeywordTok{determineValidUtterances}\NormalTok{(currentObjects)}
+\NormalTok{      utteranceGeneral <-}\StringTok{ }\KeywordTok{as.integer}\NormalTok{(blockdata}\OperatorTok{$}\NormalTok{utteranceNum[trial])}
+\NormalTok{      utterance <-}\StringTok{ }\KeywordTok{which}\NormalTok{(relevantUtterances }\OperatorTok{==}\StringTok{ }\NormalTok{utteranceGeneral)}
+\NormalTok{      ambiguous <-}\StringTok{ }\KeywordTok{isAmbiguous}\NormalTok{(allPresentFeaValues,}
+\NormalTok{                               utteranceGeneral,}
+\NormalTok{                               currentObjects,}
+\NormalTok{                               targetFeatureNum)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{ambiguous[row] <-}
+\StringTok{        }\NormalTok{ambiguous}
+\NormalTok{      ambigRatio <-}\StringTok{ }\KeywordTok{countAmbigUttRatio}\NormalTok{(allPresentFeaValues, }
+\NormalTok{                                       currentObjects, }
+\NormalTok{                                       targetFeatureNum)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{ambigRatio[row] <-}\StringTok{ }\NormalTok{ambigRatio}
+      \ControlFlowTok{if}\NormalTok{ (ambiguous) \{}
+\NormalTok{        ambiguousUtteranceCount <-}\StringTok{ }\NormalTok{ambiguousUtteranceCount }\OperatorTok{+}\StringTok{ }\DecValTok{1}
+\NormalTok{      \}}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{ambiguousUtteranceCount[row] <-}
+\StringTok{        }\NormalTok{ambiguousUtteranceCount}
+\NormalTok{      mapObjToUtt <-}
+\StringTok{        }\KeywordTok{determineObjectToUtterancesMapping}\NormalTok{(currentObjects)}
+\NormalTok{      mapUttToObjProbs <-}
+\StringTok{        }\KeywordTok{determineUtteranceToObjectProbabilities}\NormalTok{(relevantUtterances,}
+\NormalTok{                                                currentObjects,}
+\NormalTok{                                                mapObjToUtt,}
+\NormalTok{                                                notObeyInst)}
+\NormalTok{      mapUttToPref <-}
+\StringTok{        }\KeywordTok{getMapUttToPref}\NormalTok{(relevantUtterances, allObjects, allUtterancePref)}
+\NormalTok{      objectPreferenceSoftPriors <-}
+\StringTok{        }\KeywordTok{getObjectPreferencePriors}\NormalTok{(}
+\NormalTok{          relevantUtterances,}
+\NormalTok{          currentObjects,}
+\NormalTok{          softPrefValue,}
+\NormalTok{          mapUttToObjProbs,}
+\NormalTok{          mapUttToPref}
+\NormalTok{        )}
+\NormalTok{      mapUttToObjToPref <-}
+\StringTok{        }\KeywordTok{getMapUttToObjToPref}\NormalTok{(}
+\NormalTok{          currentObjects,}
+\NormalTok{          targetFeatureNum,}
+\NormalTok{          relevantUtterances,}
+\NormalTok{          allUtterancePref,}
+\NormalTok{          allObjects,}
+\NormalTok{          mapUttToPref}
+\NormalTok{        )}
+\NormalTok{      obj <-}
+\StringTok{        }\KeywordTok{which}\NormalTok{(currentObjects }\OperatorTok{==}\StringTok{ }\NormalTok{blockdata}\OperatorTok{$}\NormalTok{simulatedAnswerObjNum[trial])}
+\NormalTok{      preferencesPrior <-}
+\StringTok{        }\KeywordTok{simplePragmaticSpeaker}\NormalTok{(}
+\NormalTok{          utterance,}
+\NormalTok{          obj,}
+\NormalTok{          preferencesPrior,}
+\NormalTok{          relevantUtterances,}
+\NormalTok{          currentObjects,}
+\NormalTok{          mapUttToObjProbs,}
+\NormalTok{          objectPreferenceSoftPriors}
+\NormalTok{        )}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{preferencesPrior1[row] <-}
+\StringTok{        }\NormalTok{preferencesPrior[preferencesPriorIndices[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{preferencesPrior2[row] <-}
+\StringTok{        }\NormalTok{preferencesPrior[preferencesPriorIndices[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{preferencesPrior3[row] <-}
+\StringTok{        }\NormalTok{preferencesPrior[preferencesPriorIndices[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{      evalNumModel <-}
+\StringTok{        }\KeywordTok{evaluate}\NormalTok{(allUtterancePref, preferencesPrior, targetFeatureNum)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{evalNumModel[row] <-}\StringTok{ }\NormalTok{evalNumModel}
+\NormalTok{      humanResponse <-}
+\StringTok{        }\KeywordTok{c}\NormalTok{(}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{normResponse0[trial],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{normResponse1[trial],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{normResponse2[trial]}
+\NormalTok{        )}
+\NormalTok{      evalNum <-}
+\StringTok{        }\KeywordTok{evaluate}\NormalTok{(allUtterancePref, humanResponse, targetFeatureNum)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{evalNum[row] <-}\StringTok{ }\NormalTok{evalNum}
+\NormalTok{    \}}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+For each trial the utterance chosen by the participant is evaluated if
+it is ambiguous for the target feature or not. This shows which
+participants use ambiguity to detect information.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{inputData}\OperatorTok{$}\NormalTok{ambiguousUtteranceCount <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{ambiguousUtteranceCount)}
+\NormalTok{ambiguityUsed <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{nrow =}\NormalTok{ totalWorker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{3}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (worker }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\OperatorTok{:}\NormalTok{totalWorker)) \{}
+\NormalTok{  ambiguityUsed[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{] <-}
+\StringTok{    }\KeywordTok{unique}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid)[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{]}
+\NormalTok{  ambiguityUsed[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{] <-}
+\StringTok{    }\KeywordTok{round}\NormalTok{(}\KeywordTok{sum}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{ambiguous[}\KeywordTok{which}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid }\OperatorTok{==}\StringTok{ }\KeywordTok{unique}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid)[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{])]) }\OperatorTok{/}\StringTok{ }\DecValTok{16} \OperatorTok{*}\StringTok{ }\DecValTok{100}\NormalTok{, }\DataTypeTok{digits =} \DecValTok{1}\NormalTok{)}
+\NormalTok{  ambiguityUsed[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{] <-}
+\StringTok{    }\KeywordTok{sum}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{ambiguous[}\KeywordTok{which}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid }\OperatorTok{==}\StringTok{ }\KeywordTok{unique}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid)[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{])])}
+\NormalTok{\}}
+\NormalTok{ambiguousWorker <-}
+\StringTok{  }\KeywordTok{subset}\NormalTok{(ambiguityUsed, ambiguityUsed[, }\DecValTok{2}\NormalTok{] }\OperatorTok{>}\StringTok{ }\KeywordTok{quantile}\NormalTok{(ambiguityUsed[, }\DecValTok{2}\NormalTok{], }\FloatTok{0.75}\NormalTok{))[, }\DecValTok{1}\NormalTok{]}
+\NormalTok{inputDataAmbiguous <-}
+\StringTok{  }\KeywordTok{subset}\NormalTok{(inputData, workerid }\OperatorTok{%in%}\StringTok{ }\NormalTok{ambiguousWorker)}
+\NormalTok{nonAmbiguousWorker <-}
+\StringTok{  }\KeywordTok{subset}\NormalTok{(ambiguityUsed, ambiguityUsed[, }\DecValTok{2}\NormalTok{] }\OperatorTok{<}\StringTok{ }\KeywordTok{quantile}\NormalTok{(ambiguityUsed[, }\DecValTok{2}\NormalTok{], }\FloatTok{0.25}\NormalTok{))[, }\DecValTok{1}\NormalTok{]}
+\NormalTok{inputDataNonAmbiguous <-}
+\StringTok{  }\KeywordTok{subset}\NormalTok{(inputData, workerid }\OperatorTok{%in%}\StringTok{ }\NormalTok{nonAmbiguousWorker)}
+\end{Highlighting}
+\end{Shaded}
+
+The experimental human data was cleaned for language and assurance that
+the task was done accurately. Only participants which specified that
+their native language was English were kept. Two participants with
+different native languages (Italian and Urdu) were excluded. This
+happened to avoid problems and hassles related to language barriers.
+Also, as the study scrutinized a psycho-linguistic phenomenon, possible
+interference with other native languages as English were tried to
+minimize. Three participants who answered to the question ``Did you read
+the instructions and do you think you did the HIT correctly? - Yes, No
+or Confused'' with ``No'' or ``Confused'' were excluded too. In these
+cases the data cannot be considered in the evaluation. (HIT is an
+abbreviation for Human Intelligence Task and is to be used here
+synonymously with ``experiment''.)
+
+\hypertarget{plotting}{%
+\section{Plotting}\label{plotting}}
+
+This plot shows the success rate of the model compared with the success
+rate of the human participants. Only the last (4the) trials in a block
+were considered. The success is rated in 4 levels. An ``Evaluation
+Number'' of ``0'' reflects an inverted guessed ranking compared with the
+real hierarchy of the preferences of the choosing listener, which means
+the guessing went totally wrong. A ``3'' instead reflects the right
+detection. These results shows that around half of the cases both
+participants and model detect the real hierarchy correctly. Also in the
+other cases (Evaluation Number 0, 1, 2) the model predictions
+approximate the human results accurately. All the ``human'' bars add up
+to 100\% and likewise the ``model'' bars.
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/evaluationPlot-1} \end{center}
+
+The three next plots show the learning trajectory of the experiment
+compared with the one of the model. Also in this case the success is
+rated in 4 levels as described before - the Evaluation Number. The plots
+are constituted out of 4 lines for each source of data (human data:
+normal line, model data: dotted line). Each line of one quartet stands
+for the frequency in percent of one Evaluation Number value over the
+course of all four trials. The plots differ in which data from is
+showed. Also in these plots it becomes clear that the model predictions
+match neatly to the human data.
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/learningProcessCompared-1} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/learningProcessCompared-2} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/learningProcessCompared-3} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/learningProcessCompared-4} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/learningProcessHuman-1} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/learningProcessHuman-2} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/learningProcessHuman-3} \end{center}
+
+In this plot displays clearly the correlation between high ambiguity use
+and high preference detection success. Both for the human data and for
+the modelling results this correlation exists. The conclusion is that
+learning works best (and only) with using ambiguous utterances.
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/evaluationCountPlotRelative-1} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/evaluationCountPlotRelative-2} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/evaluationCountPlotRelative-3} \end{center}
+
+In the following scatter plots the correlation between the raw
+normalized values of the experiment compared with the model data is
+shown. For each comparison between the model predictions and the human
+value entered for one target feature value in one trial one point is
+drawn.
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/scatterPlots-1} \end{center}
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/scatterPlots-2} \end{center}
+
+In this plot all the distribution over how many ambiguous utterances
+participants picked.
+
+\begin{center}\includegraphics{ella_utt-pref-choice_evaluation_markdown_files/figure-latex/ambiguityUse-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{ambigRatio)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.2000  0.2500  0.5000  0.4365  0.5000  1.0000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(}\KeywordTok{as.factor}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{ambigRatio))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##               0.2              0.25               0.5 0.666666666666667 
+##               235               423               544               238 
+##                 1 
+##                80
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{clmm}\NormalTok{(evalNum }\OperatorTok{~}\StringTok{ }\NormalTok{Answer.time_in_minutes }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{workerid), }\DataTypeTok{data =}\NormalTok{ inputDataCondensed)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cumulative Link Mixed Model fitted with the Laplace approximation
+## 
+## formula: evalNum ~ Answer.time_in_minutes + (1 | workerid)
+## data:    inputDataCondensed
+## 
+##  link  threshold nobs logLik  AIC    niter    max.grad cond.H 
+##  logit flexible  380  -397.29 804.58 198(599) 4.48e-05 2.2e+03
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  workerid (Intercept) 1.189    1.091   
+## Number of groups:  workerid 95 
+## 
+## Coefficients:
+##                        Estimate Std. Error z value Pr(>|z|)
+## Answer.time_in_minutes  0.02682    0.03966   0.676    0.499
+## 
+## Threshold coefficients:
+##     Estimate Std. Error z value
+## 0|1  -3.2797     0.4730  -6.934
+## 1|2  -1.9690     0.4248  -4.635
+## 2|3   0.2836     0.4038   0.702
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{clmm}\NormalTok{(ambiguousUtteranceCount }\OperatorTok{~}\StringTok{ }\NormalTok{Answer.time_in_minutes }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{workerid), }\DataTypeTok{data =}\NormalTok{ inputDataCondensed)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cumulative Link Mixed Model fitted with the Laplace approximation
+## 
+## formula: ambiguousUtteranceCount ~ Answer.time_in_minutes + (1 | workerid)
+## data:    inputDataCondensed
+## 
+##  link  threshold nobs logLik  AIC    niter     max.grad cond.H 
+##  logit flexible  380  -454.64 921.28 280(1984) 2.09e-04 2.9e+03
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  workerid (Intercept) 5.519    2.349   
+## Number of groups:  workerid 95 
+## 
+## Coefficients:
+##                        Estimate Std. Error z value Pr(>|z|)
+## Answer.time_in_minutes  0.11577    0.07335   1.578    0.115
+## 
+## Threshold coefficients:
+##     Estimate Std. Error z value
+## 0|1  -3.7867     0.7548  -5.017
+## 1|2  -1.9541     0.7221  -2.706
+## 2|3  -0.2893     0.7222  -0.401
+## 3|4   1.4195     0.7323   1.938
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{clmm}\NormalTok{(evalNum }\OperatorTok{~}\StringTok{ }\NormalTok{blockNr }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{workerid), }\DataTypeTok{data =}\NormalTok{ inputDataCondensed)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cumulative Link Mixed Model fitted with the Laplace approximation
+## 
+## formula: evalNum ~ blockNr + (1 | workerid)
+## data:    inputDataCondensed
+## 
+##  link  threshold nobs logLik  AIC    niter     max.grad cond.H 
+##  logit flexible  380  -396.09 806.18 362(1089) 3.56e-04 2.9e+01
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  workerid (Intercept) 1.268    1.126   
+## Number of groups:  workerid 95 
+## 
+## Coefficients:
+##          Estimate Std. Error z value Pr(>|z|)
+## blockNr1 -0.01079    0.29918  -0.036    0.971
+## blockNr2  0.39922    0.29888   1.336    0.182
+## blockNr3  0.28472    0.29743   0.957    0.338
+## 
+## Threshold coefficients:
+##     Estimate Std. Error z value
+## 0|1  -3.3983     0.3511  -9.679
+## 1|2  -2.0672     0.2821  -7.328
+## 2|3   0.2078     0.2472   0.841
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{clmm}\NormalTok{(ambiguousUtteranceCount }\OperatorTok{~}\StringTok{ }\NormalTok{blockNr }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{workerid), }\DataTypeTok{data =}\NormalTok{ inputDataCondensed)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cumulative Link Mixed Model fitted with the Laplace approximation
+## 
+## formula: ambiguousUtteranceCount ~ blockNr + (1 | workerid)
+## data:    inputDataCondensed
+## 
+##  link  threshold nobs logLik  AIC    niter     max.grad cond.H 
+##  logit flexible  380  -448.07 912.14 599(5781) 3.76e+00 1.2e+04
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  workerid (Intercept) 6.17     2.484   
+## Number of groups:  workerid 95 
+## 
+## Coefficients:
+##          Estimate Std. Error z value Pr(>|z|)    
+## blockNr1 0.788371   0.003540   222.7   <2e-16 ***
+## blockNr2 0.790134   0.003616   218.5   <2e-16 ***
+## blockNr3 1.207806   0.003523   342.8   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Threshold coefficients:
+##      Estimate Std. Error   z value
+## 0|1 -4.326530   0.003737 -1157.801
+## 1|2 -2.442536   0.003357  -727.635
+## 2|3 -0.730159   0.175745    -4.155
+## 3|4  1.059430   0.219201     4.833
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{clmm}\NormalTok{(ambiguousUtteranceCount }\OperatorTok{~}\StringTok{ }\NormalTok{certainty }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{workerid), }\DataTypeTok{data =}\NormalTok{ inputDataCondensed)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cumulative Link Mixed Model fitted with the Laplace approximation
+## 
+## formula: ambiguousUtteranceCount ~ certainty + (1 | workerid)
+## data:    inputDataCondensed
+## 
+##  link  threshold nobs logLik  AIC    niter     max.grad cond.H 
+##  logit flexible  380  -448.84 909.67 288(2846) 3.96e+00 1.7e+04
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  workerid (Intercept) 5.796    2.407   
+## Number of groups:  workerid 95 
+## 
+## Coefficients:
+##           Estimate Std. Error z value Pr(>|z|)    
+## certainty   2.3298     0.3762   6.193  5.9e-10 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Threshold coefficients:
+##      Estimate Std. Error  z value
+## 0|1 -3.178553   0.003720 -854.474
+## 1|2 -1.332360   0.003722 -357.931
+## 2|3  0.381858   0.191933    1.990
+## 3|4  2.156956   0.250287    8.618
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{clmm}\NormalTok{(evalNum }\OperatorTok{~}\StringTok{ }\NormalTok{certainty }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{workerid), }\DataTypeTok{data =}\NormalTok{ inputDataCondensed)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cumulative Link Mixed Model fitted with the Laplace approximation
+## 
+## formula: evalNum ~ certainty + (1 | workerid)
+## data:    inputDataCondensed
+## 
+##  link  threshold nobs logLik  AIC    niter    max.grad cond.H 
+##  logit flexible  380  -387.46 784.92 203(612) 3.69e-06 7.4e+01
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  workerid (Intercept) 1.336    1.156   
+## Number of groups:  workerid 95 
+## 
+## Coefficients:
+##           Estimate Std. Error z value Pr(>|z|)    
+## certainty   2.4671     0.5639   4.375 1.22e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Threshold coefficients:
+##     Estimate Std. Error z value
+## 0|1  -1.7885     0.4791  -3.733
+## 1|2  -0.4164     0.4483  -0.929
+## 2|3   1.9446     0.4662   4.171
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmLP1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(HRelativeFreq }\OperatorTok{~}\StringTok{ }\NormalTok{MRelativeFreq, }\DataTypeTok{data =}\NormalTok{ LP1)}
+\KeywordTok{summary}\NormalTok{(lmLP1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = HRelativeFreq ~ MRelativeFreq, data = LP1)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.081370 -0.010603 -0.002137  0.012537  0.081060 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   0.004439   0.016054   0.276    0.786    
+## MRelativeFreq 0.987213   0.052668  18.744 2.59e-11 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.03693 on 14 degrees of freedom
+## Multiple R-squared:  0.9617, Adjusted R-squared:  0.9589 
+## F-statistic: 351.3 on 1 and 14 DF,  p-value: 2.585e-11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmLP2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(HRelativeFreq }\OperatorTok{~}\StringTok{ }\NormalTok{MRelativeFreq, }\DataTypeTok{data =}\NormalTok{ LP2)}
+\KeywordTok{summary}\NormalTok{(lmLP2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = HRelativeFreq ~ MRelativeFreq, data = LP2)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.11337 -0.04597  0.01516  0.03894  0.13139 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   -0.03894    0.02420  -1.609     0.13    
+## MRelativeFreq  1.16157    0.07318  15.873  2.4e-10 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.06378 on 14 degrees of freedom
+## Multiple R-squared:  0.9474, Adjusted R-squared:  0.9436 
+## F-statistic:   252 on 1 and 14 DF,  p-value: 2.402e-10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmLP3 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(HRelativeFreq }\OperatorTok{~}\StringTok{ }\NormalTok{MRelativeFreq, }\DataTypeTok{data =}\NormalTok{ LP3)  }
+\KeywordTok{summary}\NormalTok{(lmLP3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = HRelativeFreq ~ MRelativeFreq, data = LP3)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.095948 -0.022452  0.003628  0.035789  0.088628 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)    0.04036    0.03317   1.217    0.244    
+## MRelativeFreq  0.83898    0.12100   6.934 6.94e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.05377 on 14 degrees of freedom
+## Multiple R-squared:  0.7745, Adjusted R-squared:  0.7584 
+## F-statistic: 48.08 on 1 and 14 DF,  p-value: 6.939e-06
+\end{verbatim}
+
+Thanks for reading until here. Have a good day!
+
+
+\end{document}

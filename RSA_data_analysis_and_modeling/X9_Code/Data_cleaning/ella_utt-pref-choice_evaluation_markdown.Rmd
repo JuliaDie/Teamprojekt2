@@ -1,0 +1,1392 @@
+---
+output: 
+  pdf_document: 
+    keep_tex: yes
+---
+<!-- ```{r Simple_speaker, include=FALSE}``` -->
+
+---
+title: "The strategic use of ambiguity in dialogue"
+author: "Ella I. Eisemann"
+date: "21.10.2019"
+output:
+  pdf_document: 
+    fig_caption: true
+    keep_tex: true
+---
+
+## Structure
+First, the model will be shown, then the testing and then the plotting.
+
+## RSA-Model
+The developed RSA-Modelling Framework is implemented in the following pages.
+
+The simple listener function determines the hypothetical listener's object choice given the objects to choose from and its preferences, determining P(obj | utt, listener's object preferences).
+```{r Simple_listener, include=TRUE}
+    knitr::opts_chunk$set(fig.width=4, fig.height = 3) 
+
+simpleListener <-
+  function(utterance,
+           mapUttToObjProbs,
+           listenerObjectPreferences) {
+    objPosterior <-
+      mapUttToObjProbs[utterance, ] * (listenerObjectPreferences + 1e-100)
+    if (sum(objPosterior) == 0) {
+      return(objPosterior)
+    }
+    return(objPosterior / sum(objPosterior))
+  }
+```
+
+The simple pragmatic speaker considers all "imaginable" (i.e. implemented) preference distributions over objects of the listener.
+Starting with a prior assumption over the possible listener's preferences ("preferencesPrior"). This prior has one value for each feature value possible. Only the priors for the target feature values > 0 because only they are relevant for the task.
+It then infers the posterior over these preferences given the listener makes a particular object choice. 
+The priors in the beginning have a uniform distribution but with each trial the priors are the previous posterior preference presumptions. This leads to a Bayesian learning process.
+"utterance" is an index referring to one of the relevant utterances ("relevantUtterances) which are all present feature values in the current objects
+i.e. P(listener's feature value preferences | utterance, object choice by the listener, prior over preferences).
+
+```{r Simple_speaker, include=TRUE}
+simplePragmaticSpeaker <-
+  function(utterance,
+           obj,
+           preferencesPriorAll,
+           relevantUtterances,
+           currentObjects,
+           mapUttToObjProbs,
+           objectPreferenceSoftPriors) {
+    preferencesPrior <- preferencesPriorAll[relevantUtterances]
+    prefPost <- rep(0, length(relevantUtterances) + 1)
+    for (pref in c(1:length(preferencesPrior))) {
+      # prior over the preferences the speaker is interested in
+      if (preferencesPrior[pref] > 0) {
+        pp <-
+          simpleListener(utterance,
+                         mapUttToObjProbs,
+                         objectPreferenceSoftPriors[[pref]])
+        prefPost[pref] <- pp[obj] * preferencesPrior[pref]
+      }
+    }
+    for (pos in c(1:length(relevantUtterances))) {
+      preferencesPriorAll[relevantUtterances[pos]] <- prefPost[pos]
+    }
+    if (sum(preferencesPriorAll) == 0) {
+      # no evidence for any preferences... -> no inference
+      return(preferencesPriorAll)
+    }
+    return(preferencesPriorAll / sum(preferencesPriorAll))
+  }
+```
+
+```{r getAllObjectCodes, include=FALSE}
+getAllObjectCodes <- function(allObjects, allUtterancesNew1) {
+  allObjectCodes <- c(rep("000":length(allObjects[, 1])))
+  for (shape in c(1:length(allObjects[, 1]))) {
+    shapeNo <- which(allUtterancesNew1 == allObjects[shape, 1])
+    allObjectCodes[shape] <- shapeNo * 100
+  }
+  for (texture in c(1:length(allObjects[, 2]))) {
+    textureNo <- which(allUtterancesNew1 == allObjects[texture, 2]) - 3
+    allObjectCodes[texture] <-
+      allObjectCodes[texture] + (textureNo * 10)
+  }
+  for (color in c(1:length(allObjects[, 3]))) {
+    colorNo <- which(allUtterancesNew1 == allObjects[color, 3]) - 6
+    allObjectCodes[color] <- allObjectCodes[color] + colorNo
+  }
+  return(allObjectCodes)
+}
+```
+
+```{r prior_preferencesPrior, include=FALSE}
+getPreferencesPrior <- function(targetFeature) {
+  preferencesPrior <- c(rep(0, 9))
+  index <- targetFeature * 3
+  indices <- c(index, index - 1, index - 2)
+  preferencesPrior[indices] <- 1
+  return(preferencesPrior / sum(preferencesPrior))
+}
+```
+To know how well the model did, the evaluation number similar to the one used in the experiment is calculated. The best is 3 and the worst is 0. This number is calculated by comparing the simulated preferences the choosing listener has with the model or human predictions. To not compare absolute or relative numbers, as they might vary in quite big ranges, the hierarchy is compared. This results in having truthfully predicted which preferences the listener has (evaluation number = 3) in contrast to not having a clue about them (evaluation number = 0).
+```{r evaluate, include=TRUE}
+evaluate <-
+  function(allUtterancePref,
+           preferencesPrior,
+           targetFeature) {
+    index <- targetFeature * 3
+    indices <- c(index - 2, index - 1, index)
+    tarFeaPref <- allUtterancePref[indices,]
+    if (length(preferencesPrior) > 3) {
+      tarFeaPrefPrior <- preferencesPrior[indices]
+    } else {
+      tarFeaPrefPrior <- preferencesPrior
+    }
+    prefRank <-
+      order(as.numeric(tarFeaPref[, 3]))
+    prefPriorRank <-
+      order(tarFeaPrefPrior)
+    if (identical(prefRank, prefPriorRank)) {
+      evalNum <- 3
+    } else if (identical(prefPriorRank, c(prefRank[1], prefRank[3], prefRank[2])) ||
+               identical(prefPriorRank, c(prefRank[2], prefRank[1], prefRank[3]))) {
+      evalNum <- 2
+    } else if (identical(prefPriorRank, c(prefRank[2], prefRank[3], prefRank[1])) ||
+               identical(prefPriorRank, c(prefRank[3], prefRank[1], prefRank[2]))) {
+      evalNum <- 1
+    } else if (identical(prefPriorRank, c(prefRank[3], prefRank[2], prefRank[1]))) {
+      evalNum <- 0
+    }
+    return(evalNum)
+  }
+```
+
+
+# Evaluation and Model testing
+```{r preparing_reading, include=FALSE}
+rm(list = ls())
+source("SRSA_StratUtt.R")
+source("AllUtterancesAndObjects.R")
+library(knitr)
+library(ordinal)
+library(gridExtra)
+library(magrittr)
+library(tidyverse)
+library(rmarkdown)
+library(ggpubr)
+library(grid)
+library(ggplot2)
+library("dplyr")
+
+whichDataSet <- 0
+
+if (whichDataSet == 0) {
+  # pure data
+  inputData = read.csv(
+    "ella_total_allDataCleaned.csv",
+    header = TRUE,
+    na.strings = c("", " ", "NA")
+  )
+  totalWorker <-
+    length(unique(inputData$workerid)) - 1 # total worker is the highest workerid
+} else if (whichDataSet == 1) {
+  inputData = read.csv("ella_total_trials.csv",
+                       header = TRUE,
+                       na.strings = c("", " ", "NA"))
+  totalWorker <- 94 # total worker is the highest workerid
+} else if (whichDataSet == 2) {
+  # ambiguous data with first block
+  inputData = read.csv(
+    "ella_total_ambiguous.csv",
+    header = TRUE,
+    na.strings = c("", " ", "NA")
+  )
+  totalWorker <- 52
+} else if (whichDataSet == 3) {
+  # ambiguous data without first block
+  inputData = read.csv(
+    "ella_total_ambiguous_wo_first_block.csv",
+    header = TRUE,
+    na.strings = c("", " ", "NA")
+  )
+  totalWorker <- 52
+}
+```
+The model has some determining factors for how it performs. These are the not-obey-instant and the soft-preferences-value. The not-obey-instant is a value between 0 and 1, with 0 the listener follows always it's preferences and 1 not at all. The soft-preferences-value manipulates how strong the listener's preferences are. With the value being 0 the listener has absolute preferences and absolute non-preferences. Augmenting this value leads to a uniform-prior model.
+```{r model_prevalues, include=TRUE}
+notObeyInst <- 0
+softPrefValue <- 1
+```
+
+```{r preparation, include=FALSE}
+allObjectCodes <- getAllObjectCodes(allObjects, allUtterancesNew1)
+inputData$orderObjNum1 <- inputData$order0
+for (row in c(1:length(inputData$orderObjNum1))) {
+  if (!is.na(inputData$orderObjNum1[row])) {
+    inputData$orderObjNum1[row] <-
+      which(allObjectCodes == inputData$orderObjNum1[row])
+  }
+}
+inputData$orderObjNum2 <- inputData$order1
+for (row in c(1:length(inputData$orderObjNum2))) {
+  if (!is.na(inputData$orderObjNum2[row])) {
+    inputData$orderObjNum2[row] <-
+      which(allObjectCodes == inputData$orderObjNum2[row])
+  }
+}
+inputData$orderObjNum3 <- inputData$order2
+for (row in c(1:length(inputData$orderObjNum3))) {
+  if (!is.na(inputData$orderObjNum3[row])) {
+    inputData$orderObjNum3[row] <-
+      which(allObjectCodes == inputData$orderObjNum3[row])
+  }
+}
+inputData$simulatedAnswerObjNum <- inputData$simulatedAnswer
+for (row in c(1:length(inputData$simulatedAnswerObjNum))) {
+  if (!is.na(inputData$simulatedAnswerObjNum[row])) {
+    inputData$simulatedAnswerObjNum[row] <-
+      which(allObjectCodes == inputData$simulatedAnswerObjNum[row])
+  }
+}
+inputData$utteranceNum <- as.character(inputData$utterance)
+for (row in c(1:length(inputData$utteranceNum))) {
+  if (!is.na(inputData$utteranceNum[row])) {
+    inputData$utteranceNum[row] <-
+      as.integer(which(allUtterancesNew1 == inputData$utteranceNum[row]))
+  }
+}
+
+maxTrialNum <- 4
+totalBlock <- 4
+row <- 0
+
+inputData$evalNumModel <- NA
+inputData$allPresentFeaValues <- NA
+inputData$ambiguous <- NA
+inputData$preferencesPrior1 <- NA
+inputData$preferencesPrior2 <- NA
+inputData$preferencesPrior3 <- NA
+inputData$ambiguousUtteranceCount <- NA
+
+```
+
+```{r isAmbiguous, include=FALSE}
+isAmbiguous <-
+  function(allPresentFeaValues,
+           utteranceGeneral,
+           currentObjects,
+           targetFeatureNum) {
+    ambiguous <- FALSE
+    utteranceWord <- allUtterancesNew1[utteranceGeneral]
+    currentObjectsUtterances <- allObjects[currentObjects,]
+    # if(str_count(allPresentFeaValues, toString(utteranceGeneral))>1){
+    if (sum(allPresentFeaValues == utteranceGeneral) > 1) {
+      ambiguous <- TRUE
+    }
+    if (ambiguous) {
+      possibleObjectIndex <-
+        which(currentObjectsUtterances == utteranceWord, arr.ind = TRUE)[, 1]
+      possibleObjects <-
+        currentObjectsUtterances[possibleObjectIndex,]
+      possibleObjectTarFeaValue <-
+        possibleObjects[, targetFeatureNum]
+      if (!length(unique(possibleObjectTarFeaValue)) > 1) {
+        ambiguous <- FALSE
+      }
+    }
+    return(ambiguous)
+  }
+
+inputData$ambigRatio <- NA
+countAmbigUttRatio <-
+  function(allPresentFeaValues,
+           currentObjects,
+           targetFeatureNum) {
+    uniqueFeaVal <- unique(allPresentFeaValues)
+    if (targetFeatureNum == 1){
+      remove <- c(1, 2, 3)
+    } else if(targetFeatureNum == 2){
+      remove <- c(4, 5, 6)
+    } else {
+      remove <- c(7, 8, 9)
+    }
+    uniqueFeaVal <- uniqueFeaVal [! uniqueFeaVal %in% remove]
+    lengthUniqueFeaVal <- length(uniqueFeaVal)
+    ambigCount <- 0
+    for (utt in uniqueFeaVal) {
+      ambiguous <- FALSE
+      utteranceWord <- allUtterancesNew1[utt]
+      currentObjectsUtterances <- allObjects[currentObjects, ]
+      # if(str_count(allPresentFeaValues, toString(utteranceGeneral))>1){
+      if (sum(allPresentFeaValues == utt) > 1) {
+        ambiguous <- TRUE
+      }
+      if (ambiguous) {
+        possibleObjectIndex <-
+          which(currentObjectsUtterances == utteranceWord, arr.ind = TRUE)[, 1]
+        possibleObjects <-
+          currentObjectsUtterances[possibleObjectIndex, ]
+        possibleObjectTarFeaValue <-
+          possibleObjects[, targetFeatureNum]
+        if (length(unique(possibleObjectTarFeaValue)) > 1) {
+          ambigCount <- ambigCount + 1
+        }
+      }
+    }
+    ambigRatio <- ambigCount / lengthUniqueFeaVal
+    return(ambigRatio)
+  }
+
+```
+Here the model gets tested with the data from the experiment. It allows direct comparison of the performance of the model with the human behavior. The data to feed the model is the data which was also fed to the participants in the experiment.
+For each combination of objects, utterance and previous trials the model adjusts its posterior presumptions which then become the next prior presumptions.
+```{r testing_loop, include=TRUE}
+for (worker in c(0:totalWorker)) {
+  for (block in c(1:totalBlock)) {
+    blockdata <-
+      subset(inputData,
+             blockNr == block - 1 &
+               workerid == unique(inputData$workerid)[worker + 1])
+    targetFeatureNum <- blockdata$targetFeatureNum[1]
+    preferencesPrior <- getPreferencesPrior(targetFeatureNum)
+    preferencesPriorIndices <- which(preferencesPrior != 0)
+    allUtterancePref <-
+      getAllUtterancePref(
+        c(
+          blockdata$simPreference0[1],
+          blockdata$simPreference1[1],
+          blockdata$simPreference2[1]
+        )
+      )
+    ambiguousUtteranceCount <- 0
+    for (trial in c(1:maxTrialNum)) {
+      row <- row + 1
+      currentObjects <-
+        c(blockdata$orderObjNum1[trial],
+          blockdata$orderObjNum2[trial],
+          blockdata$orderObjNum3[trial])
+      allPresentFeaValues <- determineAllFeaValues(currentObjects)
+      inputData$allPresentFeaValues[row] <-
+        toString(allPresentFeaValues)
+      relevantUtterances <- determineValidUtterances(currentObjects)
+      utteranceGeneral <- as.integer(blockdata$utteranceNum[trial])
+      utterance <- which(relevantUtterances == utteranceGeneral)
+      ambiguous <- isAmbiguous(allPresentFeaValues,
+                               utteranceGeneral,
+                               currentObjects,
+                               targetFeatureNum)
+      inputData$ambiguous[row] <-
+        ambiguous
+      ambigRatio <- countAmbigUttRatio(allPresentFeaValues, 
+                                       currentObjects, 
+                                       targetFeatureNum)
+      inputData$ambigRatio[row] <- ambigRatio
+      if (ambiguous) {
+        ambiguousUtteranceCount <- ambiguousUtteranceCount + 1
+      }
+      inputData$ambiguousUtteranceCount[row] <-
+        ambiguousUtteranceCount
+      mapObjToUtt <-
+        determineObjectToUtterancesMapping(currentObjects)
+      mapUttToObjProbs <-
+        determineUtteranceToObjectProbabilities(relevantUtterances,
+                                                currentObjects,
+                                                mapObjToUtt,
+                                                notObeyInst)
+      mapUttToPref <-
+        getMapUttToPref(relevantUtterances, allObjects, allUtterancePref)
+      objectPreferenceSoftPriors <-
+        getObjectPreferencePriors(
+          relevantUtterances,
+          currentObjects,
+          softPrefValue,
+          mapUttToObjProbs,
+          mapUttToPref
+        )
+      mapUttToObjToPref <-
+        getMapUttToObjToPref(
+          currentObjects,
+          targetFeatureNum,
+          relevantUtterances,
+          allUtterancePref,
+          allObjects,
+          mapUttToPref
+        )
+      obj <-
+        which(currentObjects == blockdata$simulatedAnswerObjNum[trial])
+      preferencesPrior <-
+        simplePragmaticSpeaker(
+          utterance,
+          obj,
+          preferencesPrior,
+          relevantUtterances,
+          currentObjects,
+          mapUttToObjProbs,
+          objectPreferenceSoftPriors
+        )
+      inputData$preferencesPrior1[row] <-
+        preferencesPrior[preferencesPriorIndices[1]]
+      inputData$preferencesPrior2[row] <-
+        preferencesPrior[preferencesPriorIndices[2]]
+      inputData$preferencesPrior3[row] <-
+        preferencesPrior[preferencesPriorIndices[3]]
+      evalNumModel <-
+        evaluate(allUtterancePref, preferencesPrior, targetFeatureNum)
+      inputData$evalNumModel[row] <- evalNumModel
+      humanResponse <-
+        c(
+          blockdata$normResponse0[trial],
+          blockdata$normResponse1[trial],
+          blockdata$normResponse2[trial]
+        )
+      evalNum <-
+        evaluate(allUtterancePref, humanResponse, targetFeatureNum)
+      inputData$evalNum[row] <- evalNum
+    }
+  }
+}
+```
+
+For each trial the utterance chosen by the participant is evaluated if it is ambiguous for the target feature or not. This shows which participants use ambiguity to detect information.
+
+```{r ambiguity, include=TRUE}
+inputData$ambiguousUtteranceCount <- as.factor(inputData$ambiguousUtteranceCount)
+ambiguityUsed <- matrix(nrow = totalWorker + 1, ncol = 3)
+for (worker in c(0:totalWorker)) {
+  ambiguityUsed[worker + 1, 1] <-
+    unique(inputData$workerid)[worker + 1]
+  ambiguityUsed[worker + 1, 2] <-
+    round(sum(inputData$ambiguous[which(inputData$workerid == unique(inputData$workerid)[worker + 1])]) / 16 * 100, digits = 1)
+  ambiguityUsed[worker + 1, 3] <-
+    sum(inputData$ambiguous[which(inputData$workerid == unique(inputData$workerid)[worker + 1])])
+}
+ambiguousWorker <-
+  subset(ambiguityUsed, ambiguityUsed[, 2] > quantile(ambiguityUsed[, 2], 0.75))[, 1]
+inputDataAmbiguous <-
+  subset(inputData, workerid %in% ambiguousWorker)
+nonAmbiguousWorker <-
+  subset(ambiguityUsed, ambiguityUsed[, 2] < quantile(ambiguityUsed[, 2], 0.25))[, 1]
+inputDataNonAmbiguous <-
+  subset(inputData, workerid %in% nonAmbiguousWorker)
+```
+
+```{r condensed, include=FALSE}
+inputData$evalNum <- as.factor(inputData$evalNum)
+inputData$evalNumModel <- as.factor(inputData$evalNumModel)
+inputDataCondensed <-
+  subset(inputData, trialNum == 3)
+inputDataCondensedCompare <-
+  subset(
+    inputDataCondensed,
+    select = c(
+      normResponse0,
+      preferencesPrior1,
+      normResponse1,
+      preferencesPrior2,
+      normResponse2,
+      preferencesPrior3
+    )
+  )
+  inputDataCondensedAmbiguous <-
+  subset(inputDataCondensed, workerid %in% ambiguousWorker)
+  inputDataCondensedAmbiguousUtterance <- 
+    subset(inputDataCondensed, ambiguousUtteranceCount == 4)
+inputDataCondensedAmbiguousEqual <-
+  subset(inputDataCondensedAmbiguous, evalNum == evalNumModel)
+inputDataCondensedEqual <-
+  subset(inputDataCondensed, evalNum == evalNumModel)
+
+response0 <-
+  subset(inputDataCondensedAmbiguousUtterance,
+         select = c(normResponse0, preferencesPrior1))
+response1 <-
+  subset(inputDataCondensedAmbiguousUtterance,
+         select = c(normResponse1, preferencesPrior2))
+response2 <-
+  subset(inputDataCondensedAmbiguousUtterance,
+         select = c(normResponse2, preferencesPrior3))
+colnames(response0) <- c("normResponse", "preferencesPrior")
+colnames(response1) <- c("normResponse", "preferencesPrior")
+colnames(response2) <- c("normResponse", "preferencesPrior")
+inputDataCondensedAmbiguousUtteranceCompare <-
+  rbind(response0, response1, response2)
+
+response0 <-
+  subset(inputDataCondensedAmbiguous,
+         select = c(normResponse0, preferencesPrior1))
+response1 <-
+  subset(inputDataCondensedAmbiguous,
+         select = c(normResponse1, preferencesPrior2))
+response2 <-
+  subset(inputDataCondensedAmbiguous,
+         select = c(normResponse2, preferencesPrior3))
+colnames(response0) <- c("normResponse", "preferencesPrior")
+colnames(response1) <- c("normResponse", "preferencesPrior")
+colnames(response2) <- c("normResponse", "preferencesPrior")
+inputDataCondensedAmbiguousCompare <-
+  rbind(response0, response1, response2)
+response0 <-
+  subset(inputDataCondensedAmbiguousEqual,
+         select = c(normResponse0, preferencesPrior1))
+response1 <-
+  subset(inputDataCondensedAmbiguousEqual,
+         select = c(normResponse1, preferencesPrior2))
+response2 <-
+  subset(inputDataCondensedAmbiguousEqual,
+         select = c(normResponse2, preferencesPrior3))
+colnames(response0) <- c("normResponse", "preferencesPrior")
+colnames(response1) <- c("normResponse", "preferencesPrior")
+colnames(response2) <- c("normResponse", "preferencesPrior")
+inputDataCondensedAmbiguousEqualCompare <-
+  rbind(response0, response1, response2)
+  response0 <-
+  subset(inputDataCondensed,
+         select = c(normResponse0, preferencesPrior1))
+response1 <-
+  subset(inputDataCondensed,
+         select = c(normResponse1, preferencesPrior2))
+response2 <-
+  subset(inputDataCondensed,
+         select = c(normResponse2, preferencesPrior3))
+colnames(response0) <- c("normResponse", "preferencesPrior")
+colnames(response1) <- c("normResponse", "preferencesPrior")
+colnames(response2) <- c("normResponse", "preferencesPrior")
+inputDataCondensedCompare <- rbind(response0, response1, response2)
+```
+<hr style = "height: 10px; background: lightgray;">
+
+The experimental human data was cleaned for language and assurance that the task was done accurately.
+Only participants which specified that their native language was English were kept. Two participants with different native languages (Italian and Urdu) were excluded. This happened to avoid problems and hassles related to language barriers. Also, as the study scrutinized a psycho-linguistic phenomenon, possible interference with other native languages as English were tried to minimize. 
+Three participants who answered to the question "Did you read the instructions and do you think you did the HIT correctly? - Yes, No or Confused" with "No" or "Confused" were excluded too. In these cases the data cannot be considered in the evaluation.
+(HIT is an abbreviation for Human Intelligence Task and is to be used here synonymously with "experiment".)
+
+<hr style = "height: 10px; background: lightgray;">
+
+############################################################################
+# Plotting
+
+This plot shows the success rate of the model compared with the success rate of the human participants. Only the last (4the) trials in a block were considered. The success is rated in 4 levels. An "Evaluation Number" of "0" reflects an inverted guessed ranking compared with the real hierarchy of the preferences of the choosing listener, which means the guessing went totally wrong. A "3" instead reflects the right detection.
+These results shows that around half of the cases both participants and model detect the real hierarchy correctly. Also in the other cases (Evaluation Number 0, 1, 2) the model predictions approximate the human results accurately.
+All the "human" bars add up to 100% and likewise the "model" bars. 
+```{r evaluationPlot, echo=FALSE, fig.align="center"}
+
+roundingDigits <- 2
+
+bothTablesWithFirstBlock <-
+  rbind(data.frame(table(inputDataCondensed$evalNum)), data.frame(table(inputDataCondensed$evalNumModel)))
+HumanOrModelWithFirstBlock = rep(c("Human", "Model"), each = length(bothTablesWithFirstBlock$Freq) / 2)
+tabledEvalNumWithFirstBlock <-
+  data.frame(bothTablesWithFirstBlock, HumanOrModelWithFirstBlock)
+
+totalTrialsWithFirstBlock <-
+  sum(tabledEvalNumWithFirstBlock$Freq[HumanOrModelWithFirstBlock == "Human"])
+tabledEvalNumWithFirstBlock$relativeFreq <-
+  round(tabledEvalNumWithFirstBlock$Freq / totalTrialsWithFirstBlock,
+        digits = 4)
+
+evalNumCompairPlotWithFirstBlock <-
+  ggplot(data = tabledEvalNumWithFirstBlock,
+         aes(x = Var1, y = relativeFreq, fill = HumanOrModelWithFirstBlock)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(
+    aes(label = round(relativeFreq, roundingDigits)),
+    vjust = -0.3,
+    color = "black",
+    position = position_dodge(0.9),
+    size = 2
+  ) +
+  labs(title = "Learning success compared\n",
+       x = "Evaluation Number",
+       y = "Frequency [%/100]",
+       fill = "") + coord_cartesian(ylim = c(0, 0.65))+
+  scale_fill_manual(values=c("#3399CC", "#FFCF79"))
+
+evalNumCompairPlotWithFirstBlock
+ggsave(
+  filename = "evalNumCompairPlotWithFirstBlock.png" ,
+  plot = evalNumCompairPlotWithFirstBlock,
+  width = 20,
+  height = 20,
+  units = "cm",
+  dpi = 700
+)
+```
+
+<hr style = "height: 5px; background: lightgray;">
+The three next plots show the learning trajectory of the experiment compared with the one of the model. Also in this case the success is rated in 4 levels as described before - the Evaluation Number. The plots are constituted out of 4 lines for each source of data (human data: normal line, model data: dotted line). Each line of one quartet stands for the frequency in percent of one Evaluation Number value over the course of all four trials. 
+The plots differ in which data from is showed.
+Also in these plots it becomes clear that the model predictions match neatly to the human data.
+```{r learningProcessCompared, echo=FALSE, fig.align="center"}
+generalLPNames <- c("LP1", "LP2", "LP3")
+for (datasetNum in c(1:3)) {
+  if (datasetNum == 1) {
+    dataset <- inputData
+  } else if (datasetNum == 2) {
+    dataset <- inputDataAmbiguous
+  } else if (datasetNum == 3) {
+    dataset <- inputDataNonAmbiguous
+  }
+  total <- length(dataset$workerid) %/% maxTrialNum
+  learningProcessDataWithFirstBlock <-
+    data.frame(dataset$trialNum,
+               dataset$blockNr,
+               dataset$evalNum,
+               dataset$evalNumModel)
+  summary(learningProcessDataWithFirstBlock)
+  colnames(learningProcessDataWithFirstBlock) <-
+    c("trialNum", "blockNr", "evalNum", "evalNumModel")
+  humanLearningProcessWithFirstBlock <-
+    as.data.frame(
+      table(
+        learningProcessDataWithFirstBlock$trialNum+1,
+        learningProcessDataWithFirstBlock$evalNum
+      )
+    )
+  humanLearningProcessWithFirstBlock$relativeFreq <-
+    round(humanLearningProcessWithFirstBlock$Freq / total,
+          digits = roundingDigits)
+  
+  modelLearningProcessWithFirstBlock <-
+    as.data.frame(
+      table(
+        learningProcessDataWithFirstBlock$trialNum+1,
+        learningProcessDataWithFirstBlock$evalNumModel
+      )
+    )
+  modelLearningProcessWithFirstBlock$relativeFreq <-
+    round(modelLearningProcessWithFirstBlock$Freq / total,
+          digits = roundingDigits)
+  humanLearningProcessWithFirstBlock$datattype <- "human"
+  modelLearningProcessWithFirstBlock$datatype <- "model"
+  colnames(humanLearningProcessWithFirstBlock) <-
+    c("trialNum",
+      "evalNum",
+      "humanFreq",
+      "relativeFreq",
+      "datatype")
+  colnames(modelLearningProcessWithFirstBlock) <-
+    c("trialNum",
+      "evalNum",
+      "modelFreq",
+      "relativeFreq",
+      "datatype")
+  
+  generalLP <- as.data.frame(humanLearningProcessWithFirstBlock$trialNum ) 
+  generalLP$evalNum <- humanLearningProcessWithFirstBlock$evalNum
+  generalLP$HRelativeFreq <- humanLearningProcessWithFirstBlock$relativeFreq
+  generalLP$MRelativeFreq <- modelLearningProcessWithFirstBlock$relativeFreq
+  generalLP <- as.data.frame(generalLP)
+  assign(generalLPNames[datasetNum], generalLP)
+
+  titles <-
+    c(
+      "Learning Trajectory compared \nAll data",
+      "Learning Trajectory compared \nOnly data from subjects who picked ambiguous utterances",
+      "Learning Trajectory compared \nOnly data from subjects who didn't pick ambiguous utterances"
+    )
+  learningProcessLinePlot <- ggplot() +
+    geom_line(
+      data = humanLearningProcessWithFirstBlock,
+      aes(
+        x = trialNum,
+        y = relativeFreq,
+        color = evalNum,
+        group = evalNum,
+        linetype = datatype
+      ),
+      size = 1.5
+    ) +
+    geom_line(
+      data = modelLearningProcessWithFirstBlock,
+      aes(
+        x = trialNum,
+        y = relativeFreq,
+        color = evalNum,
+        group = evalNum,
+        linetype = datatype
+      ),
+      size = 1.5
+    ) +
+    coord_cartesian(ylim = c(0, 0.6))  +
+    labs(
+      title = titles[datasetNum],
+      x = "Trial Number",
+      y = "Frequency [%/100]",
+      color = "Evaluation\nNumber",
+      group = "Evaluation\nNumber",
+      linetype = ""
+    )
+  
+  learningProcessLinePlot
+  
+  ggsave(
+    filename = paste(
+      "learningProcessLinePlot",
+      as.character(datasetNum),
+      ".png" ,
+      sep = ""
+    ) ,
+    plot = learningProcessLinePlot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    dpi = 700
+  )
+  
+  print(learningProcessLinePlot)
+  
+}
+
+LPGeneral <- data.frame(LP1$`humanLearningProcessWithFirstBlock$trialNum`, LP1$evalNum, LP1$HRelativeFreq, LP1$MRelativeFreq, LP2$HRelativeFreq, LP2$MRelativeFreq, LP3$HRelativeFreq, LP3$MRelativeFreq)
+
+LP1Selected <- subset(LP1, evalNum == 0 | evalNum == 3)
+LP2Selected <- subset(LP2, evalNum == 0 | evalNum == 3)
+LP3Selected <- subset(LP3, evalNum == 0 | evalNum == 3)
+
+LPLPModel <- ggplot() +
+  geom_line(
+    data = LP1Selected,
+    aes(
+      x = `humanLearningProcessWithFirstBlock$trialNum`,
+      y = MRelativeFreq,
+      color = evalNum,
+      group = evalNum,
+      linetype = 'solid'
+    ),
+    size = 1
+  ) +
+  geom_line(
+    data = LP2Selected,
+    aes(
+      x = `humanLearningProcessWithFirstBlock$trialNum`,
+      y = MRelativeFreq,
+      color = evalNum,
+      group = evalNum,
+      linetype = 'dashed'
+    ),
+    size = 1
+  ) +
+  geom_line(
+    data = LP3Selected,
+    aes(
+      x = `humanLearningProcessWithFirstBlock$trialNum`,
+      y = MRelativeFreq,
+      color = evalNum,
+      group = evalNum,
+    linetype = 'dotted'
+    ),
+    size = 1
+  ) +
+  coord_cartesian(ylim = c(0, 0.7))  +
+  labs(
+    title = "Predicted performance trajectories",
+    x = "Trial Number",
+    y = "Frequency [%/100]",
+    color = "Evaluation\nNumber",
+    group = "Evaluation\nNumber",
+    linetype = ""
+  ) +
+  scale_linetype_manual(
+    name = 'Ambiguity',
+    values = c('solid' = 'solid', 'dashed' = 'dashed', 'dotted' = 'dotted'),
+    #values = c(1 = 1, 2 = 2, 3 = 3),
+    labels = c('mostly ambiguous', 'mostly unambiguous', 'all data')
+  )
+
+LPLPModel
+
+ggsave(
+  filename =
+    "LPLPModel.png",
+  plot = LPLPModel,
+  width = 20,
+  height = 15,
+  units = "cm",
+  dpi = 700
+)
+
+```
+
+```{r learningProcessHuman, echo=FALSE, fig.align="center"}
+for (datasetNum in c(1:3)) {
+  if (datasetNum == 1) {
+    dataset <- inputData
+  } else if (datasetNum == 2) {
+    dataset <- inputDataAmbiguous
+  } else if (datasetNum == 3) {
+    dataset <- inputDataNonAmbiguous
+  }
+  total <- length(dataset$workerid) %/% maxTrialNum
+  learningProcessDataWithFirstBlock <-
+    data.frame(dataset$trialNum,
+               dataset$blockNr,
+               dataset$evalNum,
+               dataset$evalNumModel)
+  summary(learningProcessDataWithFirstBlock)
+  colnames(learningProcessDataWithFirstBlock) <-
+    c("trialNum", "blockNr", "evalNum", "evalNumModel")
+  humanLearningProcessWithFirstBlock <-
+    as.data.frame(
+      table(
+        learningProcessDataWithFirstBlock$trialNum+1,
+        learningProcessDataWithFirstBlock$evalNum
+      )
+    )
+  humanLearningProcessWithFirstBlock$relativeFreq <-
+    round(humanLearningProcessWithFirstBlock$Freq / total,
+          digits = roundingDigits)
+  
+  modelLearningProcessWithFirstBlock <-
+    as.data.frame(
+      table(
+        learningProcessDataWithFirstBlock$trialNum+1,
+        learningProcessDataWithFirstBlock$evalNumModel
+      )
+    )
+  modelLearningProcessWithFirstBlock$relativeFreq <-
+    round(modelLearningProcessWithFirstBlock$Freq / total,
+          digits = roundingDigits)
+  humanLearningProcessWithFirstBlock$datattype <- "human"
+  modelLearningProcessWithFirstBlock$datatype <- "model"
+  colnames(humanLearningProcessWithFirstBlock) <-
+    c("trialNum",
+      "evalNum",
+      "humanFreq",
+      "relativeFreq",
+      "datatype")
+  colnames(modelLearningProcessWithFirstBlock) <-
+    c("trialNum",
+      "evalNum",
+      "modelFreq",
+      "relativeFreq",
+      "datatype")
+  titles <-
+    c(
+      "Human Learning Trajectory \nAll data",
+      "Human Learning Trajectory \nmostly ambiguous",
+      "Human Learning Trajectory \nmostly non-ambiguous"
+    )
+  learningProcessLinePlot <- ggplot() +
+    geom_line(
+      data = humanLearningProcessWithFirstBlock,
+      aes(
+        x = trialNum,
+        y = relativeFreq,
+        color = evalNum,
+        group = evalNum
+      ),
+      size = 1.5
+    ) + 
+    coord_cartesian(ylim = c(0, 0.8))  +
+    labs(
+      title = titles[datasetNum],
+      x = "Trial Number",
+      y = "Frequency [%/100]",
+      color = "Evaluation\nNumber",
+      group = "Evaluation\nNumber",
+      linetype = ""
+    ) + 
+    guides(size=FALSE)
+  
+  learningProcessLinePlot
+  
+  ggsave(
+    filename = paste(
+      "learningProcessLinePlotHuman",
+      as.character(datasetNum),
+      ".png" ,
+      sep = ""
+    ) ,
+    plot = learningProcessLinePlot,
+    width = 15,
+    height = 15,
+    units = "cm",
+    dpi = 700
+  )
+  
+  print(learningProcessLinePlot)
+  
+}
+```
+<hr style = "height: 5px; background: lightgray;">
+
+In this plot displays clearly the correlation between high ambiguity use and high preference detection success. Both for the human data and for the modelling results this correlation exists. 
+The conclusion is that learning works best (and only) with using ambiguous utterances.
+```{r evaluationCountPlotRelative, echo=FALSE, fig.align="center"}
+
+  #_______________RELATIVE_____________non-ambiguous vs ambiguous block -> evaluation number___________________________________________________________________________
+  
+
+
+tabeledAmbUttCount <-
+  summary(inputDataCondensed$ambiguousUtteranceCount)
+
+humanAmbBlockEval <-
+  as.data.frame(table(
+    inputDataCondensed$ambiguousUtteranceCount,
+    inputDataCondensed$evalNum
+  ))
+colnames(humanAmbBlockEval) <-
+  c("ambiguousUtteranceCount", "evaluationNumber", "Frequency")
+humanAmbBlockEval$relativeFrequency <- humanAmbBlockEval$Frequency
+humanAmbBlockEval$type <- "human"
+
+modelAmbBlockEval <-
+  as.data.frame(
+    table(
+      inputDataCondensed$ambiguousUtteranceCount,
+      inputDataCondensed$evalNumModel
+    )
+  )
+colnames(modelAmbBlockEval) <-
+  c("ambiguousUtteranceCount", "evaluationNumber", "Frequency")
+modelAmbBlockEval$type <- "model"
+modelAmbBlockEval$relativeFrequency <- modelAmbBlockEval$Frequency
+
+for (index in c(1:5)) {
+  ambCount <- index - 1
+  ambCountFreq <- tabeledAmbUttCount[[index]]
+  for (row in c(1:length(humanAmbBlockEval$ambiguousUtteranceCount))) {
+    if (humanAmbBlockEval$ambiguousUtteranceCount[row] == ambCount) {
+      humanAmbBlockEval$relativeFrequency[row] <-
+        humanAmbBlockEval$Frequency[row] / ambCountFreq
+      modelAmbBlockEval$relativeFrequency[row] <-
+        modelAmbBlockEval$Frequency[row] / ambCountFreq
+    }
+  }
+}
+
+humanAmbBlockEval0Amb <-
+  subset(humanAmbBlockEval, humanAmbBlockEval$ambiguousUtteranceCount == 0)
+humanAmbBlockEval2Amb <-
+  subset(humanAmbBlockEval, humanAmbBlockEval$ambiguousUtteranceCount == 2)
+humanAmbBlockEval4Amb <-
+  subset(humanAmbBlockEval, humanAmbBlockEval$ambiguousUtteranceCount == 4)
+
+modelAmbBlockEval0Amb <-
+  subset(modelAmbBlockEval, modelAmbBlockEval$ambiguousUtteranceCount == 0)
+modelAmbBlockEval2Amb <-
+  subset(modelAmbBlockEval, modelAmbBlockEval$ambiguousUtteranceCount == 2)
+modelAmbBlockEval4Amb <-
+  subset(modelAmbBlockEval, modelAmbBlockEval$ambiguousUtteranceCount == 4)
+
+ambBlockEval0Amb <- rbind(humanAmbBlockEval0Amb, modelAmbBlockEval0Amb)
+ambBlockEval2Amb <- rbind(humanAmbBlockEval2Amb, modelAmbBlockEval2Amb)
+ambBlockEval4Amb <- rbind(humanAmbBlockEval4Amb, modelAmbBlockEval4Amb)
+
+
+ambBlockEval0AmbPlot <-
+  ggplot(data = ambBlockEval0Amb,
+         aes(x = evaluationNumber, y = relativeFrequency, fill = type)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(
+    aes(label = round(relativeFrequency, roundingDigits)),
+    vjust = -0.3,
+    color = "black",
+    position = position_dodge(0.9),
+    size = 2
+  ) +
+  labs(title = "Learning success in blocks with \nno utterances chosen ambiguously",
+       x = "Evaluation Number",
+       y = "Frequency [%/100]",
+       fill = "") + coord_cartesian(ylim = c(0, 0.65))+
+  scale_fill_manual(values=c("#3399CC", "#FFCF79"))
+
+ambBlockEval2AmbPlot <-
+  ggplot(data = ambBlockEval2Amb,
+         aes(x = evaluationNumber, y = relativeFrequency, fill = type)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(
+    aes(label = round(relativeFrequency, roundingDigits)),
+    vjust = -0.3,
+    color = "black",
+    position = position_dodge(0.9),
+    size = 2
+  ) +
+  labs(title = "Learning success in blocks with\n2 of 4 utterances chosen ambiguously",
+       x = "Evaluation Number",
+       y = "Frequency [%/100]",
+       fill = "") + coord_cartesian(ylim = c(0, 0.65))+
+  scale_fill_manual(values=c("#3399CC", "#FFCF79"))
+
+ambBlockEval4AmbPlot <-
+  ggplot(data = ambBlockEval4Amb,
+         aes(x = evaluationNumber, y = relativeFrequency, fill = type)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(
+    aes(label = round(relativeFrequency, roundingDigits)),
+    vjust = -0.3,
+    color = "black",
+    position = position_dodge(0.9),
+    size = 2
+  ) +
+  labs(title = "Learning success in blocks with \nall utterances chosen ambiguously",
+       x = "Evaluation Number",
+       y = "Frequency [%/100]",
+       fill = "") + coord_cartesian(ylim = c(0, 0.65)) +
+  scale_fill_manual(values = c("#3399CC", "#FFCF79"))
+
+ambBlockEval0AmbPlot
+ambBlockEval2AmbPlot
+ambBlockEval4AmbPlot
+
+ambBlockEvalPlots <-
+  arrangeGrob(ambBlockEval0AmbPlot,
+               ambBlockEval2AmbPlot,
+               ambBlockEval4AmbPlot,
+               ncol = 3)
+
+ggsave(filename = "ambBlockEvalPlots.png" ,
+  plot = ambBlockEvalPlots,
+  width = 40,
+  height = 13,
+  units = "cm",
+  dpi = 700
+)
+
+ambBlockEvalPlotsSmall <-
+  arrangeGrob(ambBlockEval0AmbPlot,
+               ambBlockEval4AmbPlot,
+               ncol = 2)
+
+ggsave(filename = "ambBlockEvalPlotsSmall.png" ,
+  plot = ambBlockEvalPlotsSmall,
+  width = 26,
+  height = 13,
+  units = "cm",
+  dpi = 700
+)
+
+
+# ambiguityBlockEvaluationRelative <- ggplot() +
+#   geom_line(
+#     humanAmbBlockEval,
+#     mapping = aes(
+#       x = evaluationNumber,
+#       y = relativeFrequency,
+#       color = ambiguousUtteranceCount,
+#       group = ambiguousUtteranceCount
+#     )
+#   ) +
+#   geom_line(
+#     modelAmbBlockEval,
+#     mapping = aes(
+#       x = evaluationNumber,
+#       y = relativeFrequency,
+#       color = ambiguousUtteranceCount,
+#       group = ambiguousUtteranceCount
+#     ),
+#     linetype = "dashed"
+#   ) + labs(
+#     title = "learning success depending on how many ambiguous \nutterances were picked in the block",
+#     x = "Evaluation Number",
+#     y = "relative Frequency [%]",
+#     color = "Ambiguous \nUtterances \nper Block\n",
+#     group = "Ambiguous \nUtterances \nper Block\n"
+#   )
+# ambiguityBlockEvaluationRelative
+# ggsave(
+#   filename = "ambiguityBlockEvaluationRelative.png" ,
+#   plot = ambiguityBlockEvaluationRelative,
+#   width = 20,
+#   height = 20,
+#   units = "cm",
+#   dpi = 700
+# )
+```
+<hr style = "height: 5px; background: lightgray;">
+
+```{r evaluationCountPlot, echo=FALSE, fig.align="center", include=FALSE}
+humanAmbBlockEval <-
+  as.data.frame(table(
+    inputDataCondensed$ambiguousUtteranceCount,
+    inputDataCondensed$evalNum
+  ))
+modelAmbBlockEval <-
+  as.data.frame(
+    table(
+      inputDataCondensed$ambiguousUtteranceCount,
+      inputDataCondensed$evalNumModel
+    )
+  )
+colnames(humanAmbBlockEval) <-
+  c("ambiguousUtteranceCount", "evaluationNumber", "Frequency")
+colnames(modelAmbBlockEval) <-
+  c("ambiguousUtteranceCount", "evaluationNumber", "Frequency")
+
+ambiguityBlockEvaluation <- ggplot() +
+  geom_line(
+    humanAmbBlockEval,
+    mapping = aes(
+      x = evaluationNumber,
+      y = Frequency,
+      color = ambiguousUtteranceCount,
+      group = ambiguousUtteranceCount
+    )
+  ) +
+  geom_line(
+    modelAmbBlockEval,
+    mapping = aes(
+      x = evaluationNumber,
+      y = Frequency,
+      color = ambiguousUtteranceCount,
+      group = ambiguousUtteranceCount
+    ),
+    linetype = "dashed"
+  ) + labs(title = "learning success depending on how many ambiguous \nutterances were picked in the block",
+           x = "Evaluation Number",
+           y = "Frequency",
+           color = "Ambiguous \nUtterances \nper Block\n",
+           group = "Ambiguous \nUtterances \nper Block\n")
+
+ambiguityBlockEvaluation
+
+ggsave(
+  filename = "ambiguityBlockEvaluation.png" ,
+  plot = ambiguityBlockEvaluation,
+  width = 20,
+  height = 20,
+  units = "cm",
+  dpi = 700
+)
+```
+
+In the following scatter plots the correlation between the raw normalized values of the experiment compared with the model data is shown. For each comparison between the model predictions and the human value entered for one target feature value in one trial one point is drawn. 
+```{r scatterPlots, echo=FALSE, fig.align="center", message=FALSE, warning=FALSE}
+condensedComparePlot <-
+  ggplot(inputDataCondensedCompare,
+         mapping = aes(normResponse, preferencesPrior)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = "Last trials of block \nAll data",
+       x = "Human predictions",
+       y = "Model Predictions")+
+  annotate("text", x = 0.375, y = 1, label = expression(R^2~"= 0.23, p-value < 2e-16, 95% CI[0.096, 0.149]"))
+lm1 <- summary(lm(inputDataCondensedCompare$normResponse ~ inputDataCondensedCompare$preferencesPrior))
+
+condensedAmbiguousComparePlot <-
+  ggplot(inputDataCondensedAmbiguousCompare,
+         mapping = aes(normResponse, preferencesPrior)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = "Last trials of block \nData from subjects who picked ambiguous utterances",
+       x = "Human predictions",
+       y = "Model Predictions")+
+  annotate("text", x = 0.375, y = 1, label = expression(R^2~"= 0.55, p-value = 0.0013, 95% CI[0.026, 0.104]"))
+
+condensedAmbiguousUtteranceComparePlot <-
+  ggplot(inputDataCondensedAmbiguousUtteranceCompare,
+         mapping = aes(normResponse, preferencesPrior)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = "Last trials of block \nData from blocks with all utterances ambiguous",
+       x = "Human predictions",
+       y = "Model Predictions")+
+  annotate("text", x = 0.375, y = 1, label = expression(R^2~"= 0.42, p-value < 2e-16 , 95% CI[0.067,  0.126]"))
+
+condensedAmbiguousEqualComparePlot <-
+  ggplot(
+    inputDataCondensedAmbiguousEqualCompare,
+    mapping = aes(normResponse, preferencesPrior)
+  ) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = "Last trials of block \nData from subjects who picked ambiguous utterances \nEqual Evaluation Number",
+       x = "Human predictions",
+       y = "Model Predictions")
+
+condensedComparePlot
+condensedAmbiguousComparePlot
+# condensedAmbiguousEqualComparePlot
+
+comparePlots <-
+  arrangeGrob(
+    condensedComparePlot,
+    condensedAmbiguousComparePlot,
+    #condensedAmbiguousEqualComparePlot,
+    ncol = 2
+  )
+
+scatterUtterancePlots <-
+  arrangeGrob(
+    condensedComparePlot,
+    condensedAmbiguousUtteranceComparePlot,
+    ncol = 2
+  )
+
+ggsave(
+  filename = "condensedAmbiguousComparePlot.png",
+  plot = condensedAmbiguousComparePlot,
+  width = 15,
+  height = 15,
+  units = "cm",
+  dpi = 700
+)
+
+ggsave(
+  filename = "condensedAmbiguousUtteranceComparePlot.png",
+  plot = condensedAmbiguousUtteranceComparePlot,
+  width = 15,
+  height = 15,
+  units = "cm",
+  dpi = 700
+)
+
+ggsave(
+  filename = "condensedComparePlot.png",
+  plot = condensedComparePlot,
+  width = 15,
+  height = 15,
+  units = "cm",
+  dpi = 700
+)
+
+ggsave(
+  filename = "comparePlots2.png",
+  plot = comparePlots,
+  width = 30,
+  height = 15,
+  units = "cm",
+  dpi = 700
+)
+ggsave(
+  filename = "scatterUtterancePlots.png",
+  plot = scatterUtterancePlots,
+  width = 30,
+  height = 15,
+  units = "cm",
+  dpi = 700
+)
+```
+<hr style = "height: 5px; background: lightgray;">
+
+```{r ambiguityBlockEvaluationRelativeModel, echo=FALSE}
+tabeledAmbUttCount <-
+  summary(inputDataCondensed$ambiguousUtteranceCount)
+
+humanAmbBlockEval <-
+  as.data.frame(table(
+    inputDataCondensed$ambiguousUtteranceCount,
+    inputDataCondensed$evalNum
+  ))
+colnames(humanAmbBlockEval) <-
+  c("ambiguousUtteranceCount", "evaluationNumber", "Frequency")
+humanAmbBlockEval$relativeFrequency <- humanAmbBlockEval$Frequency
+
+modelAmbBlockEval <-
+  as.data.frame(
+    table(
+      inputDataCondensed$ambiguousUtteranceCount,
+      inputDataCondensed$evalNumModel
+    )
+  )
+colnames(modelAmbBlockEval) <-
+  c("ambiguousUtteranceCount", "evaluationNumber", "Frequency")
+modelAmbBlockEval$relativeFrequency <- modelAmbBlockEval$Frequency
+
+for (index in c(1:5)) {
+  ambCount <- index - 1
+  ambCountFreq <- tabeledAmbUttCount[[index]]
+  for (row in c(1:length(humanAmbBlockEval$ambiguousUtteranceCount))) {
+    if (humanAmbBlockEval$ambiguousUtteranceCount[row] == ambCount) {
+      humanAmbBlockEval$relativeFrequency[row] <-
+        humanAmbBlockEval$Frequency[row] / ambCountFreq
+      modelAmbBlockEval$relativeFrequency[row] <-
+        modelAmbBlockEval$Frequency[row] / ambCountFreq
+    }
+  }
+}
+
+ambiguityBlockEvaluationRelativeModel <- ggplot() +
+  geom_line(
+    modelAmbBlockEval,
+    mapping = aes(
+      x = evaluationNumber,
+      y = relativeFrequency,
+      color = ambiguousUtteranceCount,
+      group = ambiguousUtteranceCount
+    ),
+  ) + 
+  geom_point()+
+  labs(
+    title = "Predicted performance trajectories within blocks \nDepending on how many ambiguous utterances per block",
+    x = "Evaluation Number",
+    y = "Frequency [%/100]",
+    color = "Ambiguous \nUtterances \nper Block\n",
+    group = "Ambiguous \nUtterances \nper Block\n"
+  )
+
+ggsave(
+  filename = "ambiguityBlockEvaluationRelativeModel.png" ,
+  plot = ambiguityBlockEvaluationRelativeModel,
+  width = 30,
+  height = 20,
+  units = "cm",
+  dpi = 700
+)
+```
+
+In this plot all the distribution over how many ambiguous utterances participants picked.
+```{r ambiguityUse, echo=FALSE, fig.align="center"}
+ambiguityUsedArranged <- as.data.frame(table(ambiguityUsed[, 3]))
+ambiguityUsePlot <-
+  ggplot(ambiguityUsedArranged, aes(x = Var1, y = Freq)) +
+  geom_bar(stat = "identity", width = 0.2) +
+  labs(title = "Use of ambiguous utterances",
+       x = "Number of Trials with ambiguous utterances chosen (of 16 Trials)",
+       y = "Participants using ambiguous utterances (of 95)",
+       fill = "Evaluation\nNumber\n")
+
+ambiguityUsePlot
+
+ggsave(
+  filename = "ambiguity.png",
+  plot = ambiguityUsePlot,
+  width = 20,
+  height = 13,
+  units = "cm",
+  dpi = 700
+)
+```
+<hr style = "height: 5px; background: lightgray;">
+
+```{r ambigRatio, echo=TRUE, fig.align="center"}
+summary(inputData$ambigRatio)
+summary(as.factor(inputData$ambigRatio))
+```
+
+```{r blockNrFactorize, echo=FALSE}
+inputDataCondensed$blockNr <- as.factor(inputDataCondensed$blockNr)
+```
+
+```{r statTestEvalTime, echo=TRUE, fig.align="center"}
+model <- clmm(evalNum ~ Answer.time_in_minutes + (1|workerid), data = inputDataCondensed)
+summary(model)
+```
+
+```{r statTestUttTime, echo=TRUE, fig.align="center"}
+model <- clmm(ambiguousUtteranceCount ~ Answer.time_in_minutes + (1|workerid), data = inputDataCondensed)
+summary(model)
+```
+
+```{r statTestEvalBlock, echo=TRUE, fig.align="center"}
+model <- clmm(evalNum ~ blockNr + (1|workerid), data = inputDataCondensed)
+summary(model)
+```
+
+```{r statTestUttBlock, echo=TRUE, fig.align="center"}
+model <- clmm(ambiguousUtteranceCount ~ blockNr + (1|workerid), data = inputDataCondensed)
+summary(model)
+```
+
+```{r statTestUttCert, echo=TRUE, fig.align="center"}
+model <- clmm(ambiguousUtteranceCount ~ certainty + (1|workerid), data = inputDataCondensed)
+summary(model)
+```
+
+```{r statTestCertEval, echo=TRUE, fig.align="center"}
+model <- clmm(evalNum ~ certainty + (1|workerid), data = inputDataCondensed)
+summary(model)
+```
+
+```{r LP1, echo=TRUE}
+lmLP1 <- lm(HRelativeFreq ~ MRelativeFreq, data = LP1)
+summary(lmLP1)
+```
+
+```{r LP2, echo=TRUE}
+lmLP2 <- lm(HRelativeFreq ~ MRelativeFreq, data = LP2)
+summary(lmLP2)
+```
+
+```{r LP3, echo=TRUE}
+lmLP3 <- lm(HRelativeFreq ~ MRelativeFreq, data = LP3)  
+summary(lmLP3)
+```
+  
+
+Thanks for reading until here. Have a good day!
+
+<!-- ```{r Simple_speaker, echo=FALSE}``` -->

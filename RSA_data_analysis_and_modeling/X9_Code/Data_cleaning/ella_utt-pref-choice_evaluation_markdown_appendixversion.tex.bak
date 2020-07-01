@@ -1,0 +1,449 @@
+\documentclass[a4paper,12pt,twoside]{report}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fancyhdr}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={The strategic use of ambiguity in dialogue},
+            pdfauthor={Ella I. Eisemann},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{The strategic use of ambiguity in dialogue}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Ella I. Eisemann}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{21.10.2019}
+    
+\setcounter{page}{39}
+\setcounter{chapter}{8}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\textit{Chapter 9 Appendices: Model, Simulation and Statistics}}
+\fancyhead[RO]{}
+\fancyfoot[LE,RO]{\thepage}
+
+
+
+\begin{document}
+
+\chapter{Appendices: Model and Simulation}
+\hypertarget{structure}{%
+\subsection{Structure}\label{structure}}
+\footnotesize
+First, the model will be shown, then the model testing and then the
+statistical test.
+
+\hypertarget{rsa-model}{%
+\subsection{RSA-Model}\label{rsa-model}}
+
+The developed RSA-Modelling Framework is implemented in the following
+pages.
+
+The simple listener function determines the hypothetical listener's
+object choice given the objects to choose from and its preferences,
+determining P(obj \textbar{} utt, listener's object preferences).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{    knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{fig.width=}\DecValTok{4}\NormalTok{, }\DataTypeTok{fig.height =} \DecValTok{3}\NormalTok{) }
+
+\NormalTok{simpleListener <-}
+\StringTok{  }\ControlFlowTok{function}\NormalTok{(utterance,}
+\NormalTok{           mapUttToObjProbs,}
+\NormalTok{           listenerObjectPreferences) \{}
+\NormalTok{    objPosterior <-}
+\StringTok{      }\NormalTok{mapUttToObjProbs[utterance, ] }\OperatorTok{*}\StringTok{ }\NormalTok{(listenerObjectPreferences }\OperatorTok{+}\StringTok{ }\FloatTok{1e-100}\NormalTok{)}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{sum}\NormalTok{(objPosterior) }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) \{}
+      \KeywordTok{return}\NormalTok{(objPosterior)}
+\NormalTok{    \}}
+    \KeywordTok{return}\NormalTok{(objPosterior }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(objPosterior))}
+\NormalTok{  \}}
+\end{Highlighting}
+\end{Shaded}
+
+The simple pragmatic speaker considers all ``imaginable''
+(i.e.~implemented) preference distributions over objects of the
+listener. Starting with a prior assumption over the possible listener's
+preferences (``preferencesPrior''). This prior has one value for each
+feature value possible. Only the priors for the target feature values
+\textgreater{} 0 because only they are relevant for the task. It then
+infers the posterior over these preferences given the listener makes a
+particular object choice. The priors in the beginning have a uniform
+distribution but with each trial the priors are the previous posterior
+preference presumptions. This leads to a Bayesian learning process.
+``utterance'' is an index referring to one of the relevant utterances
+("relevantUtterances) which are all present feature values in the
+current objects i.e.~P(listener's feature value preferences \textbar{}
+utterance, object choice by the listener, prior over preferences).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{simplePragmaticSpeaker <-}
+\StringTok{  }\ControlFlowTok{function}\NormalTok{(utterance,}
+\NormalTok{           obj,}
+\NormalTok{           preferencesPriorAll,}
+\NormalTok{           relevantUtterances,}
+\NormalTok{           currentObjects,}
+\NormalTok{           mapUttToObjProbs,}
+\NormalTok{           objectPreferenceSoftPriors) \{}
+\NormalTok{    preferencesPrior <-}\StringTok{ }\NormalTok{preferencesPriorAll[relevantUtterances]}
+\NormalTok{    prefPost <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\KeywordTok{length}\NormalTok{(relevantUtterances) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{ (pref }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(preferencesPrior))) \{}
+      \CommentTok{# prior over the preferences the speaker is interested in}
+      \ControlFlowTok{if}\NormalTok{ (preferencesPrior[pref] }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{) \{}
+\NormalTok{        pp <-}
+\StringTok{          }\KeywordTok{simpleListener}\NormalTok{(utterance,}
+\NormalTok{                         mapUttToObjProbs,}
+\NormalTok{                         objectPreferenceSoftPriors[[pref]])}
+\NormalTok{        prefPost[pref] <-}\StringTok{ }\NormalTok{pp[obj] }\OperatorTok{*}\StringTok{ }\NormalTok{preferencesPrior[pref]}
+\NormalTok{      \}}
+\NormalTok{    \}}
+    \ControlFlowTok{for}\NormalTok{ (pos }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(relevantUtterances))) \{}
+\NormalTok{      preferencesPriorAll[relevantUtterances[pos]] <-}\StringTok{ }\NormalTok{prefPost[pos]}
+\NormalTok{    \}}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{sum}\NormalTok{(preferencesPriorAll) }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) \{}
+      \CommentTok{# no evidence for any preferences... -> no inference}
+      \KeywordTok{return}\NormalTok{(preferencesPriorAll)}
+\NormalTok{    \}}
+    \KeywordTok{return}\NormalTok{(preferencesPriorAll }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(preferencesPriorAll))}
+\NormalTok{  \}}
+\end{Highlighting}
+\end{Shaded}
+
+To know how well the model did, the evaluation number similar to the one
+used in the experiment is calculated. The best is 3 and the worst is 0.
+This number is calculated by comparing the simulated preferences the
+choosing listener has with the model or human predictions. To not
+compare absolute or relative numbers, as they might vary in quite big
+ranges, the hierarchy is compared. This results in having truthfully
+predicted which preferences the listener has (evaluation number = 3) in
+contrast to not having a clue about them (evaluation number = 0).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{evaluate <-}
+\StringTok{  }\ControlFlowTok{function}\NormalTok{(allUtterancePref,}
+\NormalTok{           preferencesPrior,}
+\NormalTok{           targetFeature) \{}
+\NormalTok{    index <-}\StringTok{ }\NormalTok{targetFeature }\OperatorTok{*}\StringTok{ }\DecValTok{3}
+\NormalTok{    indices <-}\StringTok{ }\KeywordTok{c}\NormalTok{(index }\OperatorTok{-}\StringTok{ }\DecValTok{2}\NormalTok{, index }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{, index)}
+\NormalTok{    tarFeaPref <-}\StringTok{ }\NormalTok{allUtterancePref[indices,]}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(preferencesPrior) }\OperatorTok{>}\StringTok{ }\DecValTok{3}\NormalTok{) \{}
+\NormalTok{      tarFeaPrefPrior <-}\StringTok{ }\NormalTok{preferencesPrior[indices]}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      tarFeaPrefPrior <-}\StringTok{ }\NormalTok{preferencesPrior}
+\NormalTok{    \}}
+\NormalTok{    prefRank <-}
+\StringTok{      }\KeywordTok{order}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(tarFeaPref[, }\DecValTok{3}\NormalTok{]))}
+\NormalTok{    prefPriorRank <-}
+\StringTok{      }\KeywordTok{order}\NormalTok{(tarFeaPrefPrior)}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(prefRank, prefPriorRank)) \{}
+\NormalTok{      evalNum <-}\StringTok{ }\DecValTok{3}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{1}\NormalTok{], prefRank[}\DecValTok{3}\NormalTok{], prefRank[}\DecValTok{2}\NormalTok{])) }\OperatorTok{||}
+\StringTok{               }\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{2}\NormalTok{], prefRank[}\DecValTok{1}\NormalTok{], prefRank[}\DecValTok{3}\NormalTok{]))) \{}
+\NormalTok{      evalNum <-}\StringTok{ }\DecValTok{2}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{2}\NormalTok{], prefRank[}\DecValTok{3}\NormalTok{], prefRank[}\DecValTok{1}\NormalTok{])) }\OperatorTok{||}
+\StringTok{               }\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{3}\NormalTok{], prefRank[}\DecValTok{1}\NormalTok{], prefRank[}\DecValTok{2}\NormalTok{]))) \{}
+\NormalTok{      evalNum <-}\StringTok{ }\DecValTok{1}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(prefPriorRank, }\KeywordTok{c}\NormalTok{(prefRank[}\DecValTok{3}\NormalTok{], prefRank[}\DecValTok{2}\NormalTok{], prefRank[}\DecValTok{1}\NormalTok{]))) \{}
+\NormalTok{      evalNum <-}\StringTok{ }\DecValTok{0}
+\NormalTok{    \}}
+    \KeywordTok{return}\NormalTok{(evalNum)}
+\NormalTok{  \}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{evaluation-and-model-testing}{%
+\section{Simulation}\label{simulation}}
+
+The model has some determining factors for how it performs. These are
+the not-obey-instant and the soft-preferences-value. The
+not-obey-instant is a value between 0 and 1, with 0 the listener follows
+always it's preferences and 1 not at all. The soft-preferences-value
+manipulates how strong the listener's preferences are. With the value
+being 0 the listener has absolute preferences and absolute
+non-preferences. Augmenting this value leads to a uniform-prior model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{notObeyInst <-}\StringTok{ }\DecValTok{0}
+\NormalTok{softPrefValue <-}\StringTok{ }\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+Here the model gets tested with the data from the experiment. It allows
+direct comparison of the performance of the model with the human
+behavior. The data to feed the model is the data which was also fed to
+the participants in the experiment. For each combination of objects,
+utterance and previous trials the model adjusts its posterior
+presumptions which then become the next prior presumptions.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (worker }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\OperatorTok{:}\NormalTok{totalWorker)) \{}
+  \ControlFlowTok{for}\NormalTok{ (block }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{totalBlock)) \{}
+\NormalTok{    blockdata <-}
+\StringTok{      }\KeywordTok{subset}\NormalTok{(inputData,}
+\NormalTok{             blockNr }\OperatorTok{==}\StringTok{ }\NormalTok{block }\OperatorTok{-}\StringTok{ }\DecValTok{1} \OperatorTok{&}
+\StringTok{               }\NormalTok{workerid }\OperatorTok{==}\StringTok{ }\KeywordTok{unique}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid)[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{])}
+\NormalTok{    targetFeatureNum <-}\StringTok{ }\NormalTok{blockdata}\OperatorTok{$}\NormalTok{targetFeatureNum[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    preferencesPrior <-}\StringTok{ }\KeywordTok{getPreferencesPrior}\NormalTok{(targetFeatureNum)}
+\NormalTok{    preferencesPriorIndices <-}\StringTok{ }\KeywordTok{which}\NormalTok{(preferencesPrior }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{)}
+\NormalTok{    allUtterancePref <-}
+\StringTok{      }\KeywordTok{getAllUtterancePref}\NormalTok{(}
+        \KeywordTok{c}\NormalTok{(}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{simPreference0[}\DecValTok{1}\NormalTok{],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{simPreference1[}\DecValTok{1}\NormalTok{],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{simPreference2[}\DecValTok{1}\NormalTok{]}
+\NormalTok{        )}
+\NormalTok{      )}
+\NormalTok{    ambiguousUtteranceCount <-}\StringTok{ }\DecValTok{0}
+    \ControlFlowTok{for}\NormalTok{ (trial }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{maxTrialNum)) \{}
+\NormalTok{      row <-}\StringTok{ }\NormalTok{row }\OperatorTok{+}\StringTok{ }\DecValTok{1}
+\NormalTok{      currentObjects <-}
+\StringTok{        }\KeywordTok{c}\NormalTok{(blockdata}\OperatorTok{$}\NormalTok{orderObjNum1[trial],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{orderObjNum2[trial],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{orderObjNum3[trial])}
+\NormalTok{      allPresentFeaValues <-}\StringTok{ }\KeywordTok{determineAllFeaValues}\NormalTok{(currentObjects)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{allPresentFeaValues[row] <-}
+\StringTok{        }\KeywordTok{toString}\NormalTok{(allPresentFeaValues)}
+\NormalTok{      relevantUtterances <-}\StringTok{ }\KeywordTok{determineValidUtterances}\NormalTok{(currentObjects)}
+\NormalTok{      utteranceGeneral <-}\StringTok{ }\KeywordTok{as.integer}\NormalTok{(blockdata}\OperatorTok{$}\NormalTok{utteranceNum[trial])}
+\NormalTok{      utterance <-}\StringTok{ }\KeywordTok{which}\NormalTok{(relevantUtterances }\OperatorTok{==}\StringTok{ }\NormalTok{utteranceGeneral)}
+\NormalTok{      ambiguous <-}\StringTok{ }\KeywordTok{isAmbiguous}\NormalTok{(allPresentFeaValues,}
+\NormalTok{                               utteranceGeneral,}
+\NormalTok{                               currentObjects,}
+\NormalTok{                               targetFeatureNum)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{ambiguous[row] <-}
+\StringTok{        }\NormalTok{ambiguous}
+\NormalTok{      ambigRatio <-}\StringTok{ }\KeywordTok{countAmbigUttRatio}\NormalTok{(allPresentFeaValues, }
+\NormalTok{                                       currentObjects, }
+\NormalTok{                                       targetFeatureNum)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{ambigRatio[row] <-}\StringTok{ }\NormalTok{ambigRatio}
+      \ControlFlowTok{if}\NormalTok{ (ambiguous) \{}
+\NormalTok{        ambiguousUtteranceCount <-}\StringTok{ }\NormalTok{ambiguousUtteranceCount }\OperatorTok{+}\StringTok{ }\DecValTok{1}
+\NormalTok{      \}}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{ambiguousUtteranceCount[row] <-}
+\StringTok{        }\NormalTok{ambiguousUtteranceCount}
+\NormalTok{      mapObjToUtt <-}
+\StringTok{        }\KeywordTok{determineObjectToUtterancesMapping}\NormalTok{(currentObjects)}
+\NormalTok{      mapUttToObjProbs <-}
+\StringTok{        }\KeywordTok{determineUtteranceToObjectProbabilities}\NormalTok{(relevantUtterances,}
+\NormalTok{                                                currentObjects,}
+\NormalTok{                                                mapObjToUtt,}
+\NormalTok{                                                notObeyInst)}
+\NormalTok{      mapUttToPref <-}
+\StringTok{        }\KeywordTok{getMapUttToPref}\NormalTok{(relevantUtterances, allObjects, allUtterancePref)}
+\NormalTok{      objectPreferenceSoftPriors <-}
+\StringTok{        }\KeywordTok{getObjectPreferencePriors}\NormalTok{(}
+\NormalTok{          relevantUtterances,}
+\NormalTok{          currentObjects,}
+\NormalTok{          softPrefValue,}
+\NormalTok{          mapUttToObjProbs,}
+\NormalTok{          mapUttToPref}
+\NormalTok{        )}
+\NormalTok{      mapUttToObjToPref <-}
+\StringTok{        }\KeywordTok{getMapUttToObjToPref}\NormalTok{(}
+\NormalTok{          currentObjects,}
+\NormalTok{          targetFeatureNum,}
+\NormalTok{          relevantUtterances,}
+\NormalTok{          allUtterancePref,}
+\NormalTok{          allObjects,}
+\NormalTok{          mapUttToPref}
+\NormalTok{        )}
+\NormalTok{      obj <-}
+\StringTok{        }\KeywordTok{which}\NormalTok{(currentObjects }\OperatorTok{==}\StringTok{ }\NormalTok{blockdata}\OperatorTok{$}\NormalTok{simulatedAnswerObjNum[trial])}
+\NormalTok{      preferencesPrior <-}
+\StringTok{        }\KeywordTok{simplePragmaticSpeaker}\NormalTok{(}
+\NormalTok{          utterance,}
+\NormalTok{          obj,}
+\NormalTok{          preferencesPrior,}
+\NormalTok{          relevantUtterances,}
+\NormalTok{          currentObjects,}
+\NormalTok{          mapUttToObjProbs,}
+\NormalTok{          objectPreferenceSoftPriors}
+\NormalTok{        )}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{preferencesPrior1[row] <-}
+\StringTok{        }\NormalTok{preferencesPrior[preferencesPriorIndices[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{preferencesPrior2[row] <-}
+\StringTok{        }\NormalTok{preferencesPrior[preferencesPriorIndices[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{preferencesPrior3[row] <-}
+\StringTok{        }\NormalTok{preferencesPrior[preferencesPriorIndices[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{      evalNumModel <-}
+\StringTok{        }\KeywordTok{evaluate}\NormalTok{(allUtterancePref, preferencesPrior, targetFeatureNum)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{evalNumModel[row] <-}\StringTok{ }\NormalTok{evalNumModel}
+\NormalTok{      humanResponse <-}
+\StringTok{        }\KeywordTok{c}\NormalTok{(}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{normResponse0[trial],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{normResponse1[trial],}
+\NormalTok{          blockdata}\OperatorTok{$}\NormalTok{normResponse2[trial]}
+\NormalTok{        )}
+\NormalTok{      evalNum <-}
+\StringTok{        }\KeywordTok{evaluate}\NormalTok{(allUtterancePref, humanResponse, targetFeatureNum)}
+\NormalTok{      inputData}\OperatorTok{$}\NormalTok{evalNum[row] <-}\StringTok{ }\NormalTok{evalNum}
+\NormalTok{    \}}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+For each trial the utterance chosen by the participant is evaluated if
+it is ambiguous for the target feature or not. This shows which
+participants use ambiguity to detect information.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{inputData}\OperatorTok{$}\NormalTok{ambiguousUtteranceCount <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{ambiguousUtteranceCount)}
+\NormalTok{ambiguityUsed <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{nrow =}\NormalTok{ totalWorker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{3}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (worker }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\OperatorTok{:}\NormalTok{totalWorker)) \{}
+\NormalTok{  ambiguityUsed[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{] <-}
+\StringTok{    }
+\KeywordTok{unique}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid)[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{]}
+\NormalTok{  ambiguityUsed[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{] <-}
+\StringTok{    }\KeywordTok{round}\NormalTok{(}\KeywordTok{sum}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{ambiguous[}\KeywordTok{which}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid }\OperatorTok{==}
+\StringTok{ }
+\KeywordTok{unique}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid)[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{])]) }\OperatorTok{/}\StringTok{ }\DecValTok{16} \OperatorTok{*}\StringTok{ }\DecValTok{100}\NormalTok{, }\DataTypeTok{digits =} \DecValTok{1}\NormalTok{)}
+\NormalTok{  ambiguityUsed[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{] <-}
+\StringTok{    }\KeywordTok{sum}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{ambiguous[}\KeywordTok{which}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid }\OperatorTok{==}\StringTok{ }\KeywordTok{unique}\NormalTok{(inputData}\OperatorTok{$}\NormalTok{workerid)[worker }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{])])}
+\NormalTok{\}}
+\NormalTok{ambiguousWorker <-}
+\StringTok{  }\KeywordTok{subset}\NormalTok{(ambiguityUsed, ambiguityUsed[, }\DecValTok{2}\NormalTok{] }\OperatorTok{>}\StringTok{ }\KeywordTok{quantile}\NormalTok{(ambiguityUsed[, }\DecValTok{2}\NormalTok{], }\FloatTok{0.75}\NormalTok{))[, }\DecValTok{1}\NormalTok{]}
+\NormalTok{inputDataAmbiguous <-}
+\StringTok{  }\KeywordTok{subset}\NormalTok{(inputData, workerid }\OperatorTok{%in%}\StringTok{ }\NormalTok{ambiguousWorker)}
+\NormalTok{nonAmbiguousWorker <-}
+\StringTok{  }\KeywordTok{subset}\NormalTok{(ambiguityUsed, ambiguityUsed[, }\DecValTok{2}\NormalTok{] }\OperatorTok{<}\StringTok{ }\KeywordTok{quantile}\NormalTok{(ambiguityUsed[, }\DecValTok{2}\NormalTok{], }\FloatTok{0.25}\NormalTok{))[, }\DecValTok{1}\NormalTok{]}
+\NormalTok{inputDataNonAmbiguous <-}
+\StringTok{  }\KeywordTok{subset}\NormalTok{(inputData, workerid }\OperatorTok{%in%}\StringTok{ }\NormalTok{nonAmbiguousWorker)}
+\end{Highlighting}
+\end{Shaded}
+
+The experimental human data was cleaned for language and assurance that
+the task was done accurately. Only participants which specified that
+their native language was English were kept. Two participants with
+different native languages (Italian and Urdu) were excluded. This
+happened to avoid problems and hassles related to language barriers.
+Also, as the study scrutinized a psycho-linguistic phenomenon, possible
+interference with other native languages as English were tried to
+minimize. Three participants who answered to the question ``Did you read
+the instructions and do you think you did the HIT correctly? - Yes, No
+or Confused'' with ``No'' or ``Confused'' were excluded too. In these
+cases the data cannot be considered in the evaluation. (HIT is an
+abbreviation for Human Intelligence Task and is to be used here
+synonymously with ``experiment''.)
+
+Thanks for reading until here. Have a good day!
+
+
+\end{document}
