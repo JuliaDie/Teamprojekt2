@@ -1,4 +1,4 @@
-setwd("C:/Users/tizma/Google Drive/University/Teamprojekt/Teamprojekt2-master/Utt-Pref-Choice-And-Quiz-master/sRSA-dialogic")
+#setwd("C:/Users/tizma/Google Drive/University/Teamprojekt/Teamprojekt2-master/Utt-Pref-Choice-And-Quiz-master/sRSA-dialogic")
 
 
 
