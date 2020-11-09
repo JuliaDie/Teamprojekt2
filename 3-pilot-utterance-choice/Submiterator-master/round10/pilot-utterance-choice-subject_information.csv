@@ -1,0 +1,10 @@
+workerid,language,enjoyment,gender,age,comments,assess,education
+0,English,2,Female,29,fun study,Yes,1
+1,english,2,Male,33,,Yes,1
+2,English,1,Female,27,,Yes,2
+3,english,1,Female,39,,No,1
+4,English,1,Female,28,,Yes,3
+5,English,1,Male,44,,Yes,3
+6,English,2,Female,52,thank you,Yes,2
+7,English,0,Female,32,,Yes,3
+8,Hmong,1,Male,29,,Confused,3

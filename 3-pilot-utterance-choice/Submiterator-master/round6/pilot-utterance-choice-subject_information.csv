@@ -1,0 +1,10 @@
+workerid,language,enjoyment,gender,age,comments,assess,education
+0,English,1,Male,51,,Yes,2
+1,English,1,Male,33,,Yes,4
+2,English,1,Male,31,,Yes,3
+3,United States,1,Female,32,,Confused,2
+4,English,1,Female,33,About 50% underpaid but it ran smoothly and was interesting. ,Yes,3
+5,english,1,Female,66,,Yes,3
+6,English,2,Female,53,"I found it somewhat confusing.  When it referred to ""solid,"" I thought that meant something like not having a hole in the middle of the object.  Later, I began to be concerned it mean not striped or otherwise patterned.  It was ambiguous.  I was also confused because I was unsure whether we were trying for a high probability that the person would choose the one they preferred or a certainty.  ",Confused,4
+7,English,1,Female,29,No,Yes,2
+8,English ,1,Male,28,,Yes,2

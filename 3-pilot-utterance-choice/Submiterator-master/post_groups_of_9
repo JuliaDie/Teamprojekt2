@@ -1,0 +1,17 @@
+NSUBJ_TOTAL=90
+ROUND_SIZE=9
+NROUNDS_TOTAL=$((($NSUBJ_TOTAL+ROUND_SIZE-1)/ROUND_SIZE))
+
+num_round_dirs=$(echo */ | wc | awk '{print $2}')
+#next_dir_index=$(($num_round_dirs)) ## first run
+next_dir_index=$(($num_round_dirs+1)) ## rest of the runs
+
+if [ "$next_dir_index" -le "$NROUNDS_TOTAL" ];
+then
+	submiterator posthit pilot-utterance-choice
+	mkdir round$next_dir_index
+	mv pilot-utterance-choice.success round$next_dir_index
+	rm *.input
+	rm *.properties
+	rm *.question
+fi

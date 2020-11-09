@@ -1,0 +1,10 @@
+workerid,language,enjoyment,gender,age,comments,assess,education
+0,english,1,Male,37,,Yes,4
+1,English,1,Female,45,,Confused,3
+2,English,1,Male,19,,Yes,1
+3,English,1,Male,28,,Yes,3
+4,English,2,Female,27,"I would like to know if I followed the instructions correctly or not, or if that was point of this experiment. I was confused. I didn&quotechart know if I was supposed to select a specific object or order of objects.",Confused,2
+5,English,1,Female,29,,Yes,3
+6,english,2,Female,22,,Yes,3
+7,English,1,Female,68,No comments,Yes,2
+8,ENGLISH,2,Female,34,Yes this hit is intresting,Yes,3

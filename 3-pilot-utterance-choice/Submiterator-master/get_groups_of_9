@@ -1,0 +1,9 @@
+num_round_dirs=$(echo */ | wc | awk '{print $2}')
+
+for i in `seq 1 $num_round_dirs`;
+do
+	cd round$i
+	submiterator getresults pilot-utterance-choice
+	submiterator reformat pilot-utterance-choice
+	cd ..
+done
